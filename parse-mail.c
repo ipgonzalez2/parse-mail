@@ -82,12 +82,13 @@ int http_filter(struct __sk_buff *skb) {
 	struct char_1 *c;
 	c = cursor_advance(cursor, 1);
 	u32 i = 0;
-	char b;
+	u32 b = 0;
 
 	#pragma unroll
-	while(c->c != '\n' && i < payload_length){
-		c = cursor_advance(cursor, 1);
-		i++;
+	for(i = 0; i < 1500 ; i++){
+		if(load_byte(skb, payload_offset + i) == '\n'){
+			b = i;
+		}
 	}
 
 	/*if(c->c == '\n'){
@@ -125,7 +126,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(c->c == '\n'){
+	if(b = 2){
 		goto KEEP;
 	}
 	
