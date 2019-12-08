@@ -126,7 +126,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(b = 2){
+	if(b == 2){
 		goto KEEP;
 	}
 	
