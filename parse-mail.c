@@ -85,9 +85,9 @@ int http_filter(struct __sk_buff *skb) {
 	u32 b = 0;
 
 	#pragma unroll
-	for(i = 0; i < 1500 ; i++){
-		if(load_byte(skb, payload_offset + i) == '\n'){
-			b = i;
+	for(i = 0; i < 3500 ; i++){
+		if(load_byte(skb, payload_offset + i) == '\n' && load_byte(skb, payload_offset +(i+1)) == '\n'){
+			b = i + 2;
 		}
 	}
 
@@ -126,7 +126,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(b == 1500){
+	if(b == 2479){
 		goto KEEP;
 	}
 	
