@@ -85,11 +85,11 @@ int http_filter(struct __sk_buff *skb) {
 
 	#pragma unroll
 
-	while(c->c != '\n' && i < payload_length ){
+	while(c->c != 's' && i < payload_length ){
 		c = cursor_advance(c,1);
 	}
 
-	if(c->c == '\n'){
+	if(c->c == 's'){
 		c = cursor_advance(c,1);
 	}else{
 		goto DROP;
@@ -133,7 +133,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(c->c == 'R'){
+	if(c->c == 'o'){
 		goto KEEP;
 	}
 	
