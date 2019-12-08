@@ -23,14 +23,17 @@ struct char_1
 int http_filter(struct __sk_buff *skb) {
 
 	u8 *cursor = 0;
+	u8 *cursor2 = 0;
 	
 	struct ethernet_t *ethernet = cursor_advance(cursor, sizeof(*ethernet));
+	void *v1 = cursor_advance(cursor2, sizeof(*ethernet));
 	//filter IP packets (ethernet type = 0x0800)
 	if (!(ethernet->type == 0x0800)) {
 		goto DROP;
 	}
 
 	struct ip_t *ip = cursor_advance(cursor, sizeof(*ip));
+	void *v2 = cursor_advance(cursor2, sizeof(*ip));
 	//filter TCP packets (ip next proocol = 0x06)
 	if (ip->nextp != IP_TCP) {
 		goto DROP;
@@ -53,8 +56,10 @@ int http_filter(struct __sk_buff *skb) {
 
         //shift cursor forward for dynamic ip header size
     void *_ = cursor_advance(cursor, (ip_header_length-sizeof(*ip)));
+	void *v3 = cursor_advance(cursor2, (ip_header_length-sizeof(*ip)));
 
 	struct tcp_t *tcp = cursor_advance(cursor, sizeof(*tcp));
+	void *v4 = cursor_advance(cursor2, sizeof(*tcp));
 
 	//DE momento pruebas no
 	/*if(tcp->dst_port != 25){
@@ -80,15 +85,17 @@ int http_filter(struct __sk_buff *skb) {
 	//include empty payload
 	
 	struct char_1 *c;
+	struct char_1 *b;
 	c = cursor_advance(cursor, 1);
+	b = cursor_advance(cursor2, 1);
+	b = cursor_advance(cursor2, 1);
 	u32 i = 0;
 	u32 b = 0;
 
 	#pragma unroll
-	for(i = 0; i < 3500 ; i++){
-		if(load_byte(skb, payload_offset + i) == '\n' && load_byte(skb, payload_offset +(i+1)) == '\n'){
-			b = i + 2;
-		}
+	for(c->c != b->c && b->c != '\n'){
+		c= cursor_advance(cursor, 1);
+		b = cursor_advance(cursor2, 1);
 	}
 
 	/*if(c->c == '\n'){
@@ -126,7 +133,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(b == 2479){
+	if(b->c == '\n'){
 		goto KEEP;
 	}
 	
