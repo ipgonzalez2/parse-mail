@@ -78,7 +78,21 @@ int http_filter(struct __sk_buff *skb) {
 	//minimum length of http request is always geater than 7 bytes
 	//avoid invalid access memory
 	//include empty payload
+	
+	struct char_1 *c;
+	c = cursor_advance(cursor, 1);
 
+
+	 /*#pragma unroll
+    	while({
+          c = cursor_advance(cursor, 1);
+          if (c->c == 0)
+            break;
+          key.p[i] = c->c;
+        }*/
+
+
+	/*
 	//Se pasa al crear el programa
 	u32 tamañoMensaje = 804;
 
@@ -103,6 +117,10 @@ int http_filter(struct __sk_buff *skb) {
 
 	//Los carácteres concretos se pasan al crear el programa
 	if ((p[0] == '<') && (p[1] == '"') && (p[2] == '4') && (p[3] == 'n')) {
+		goto KEEP;
+	}*/
+
+	if(c->c == 'F'){
 		goto KEEP;
 	}
 	
