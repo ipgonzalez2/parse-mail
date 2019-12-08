@@ -81,6 +81,19 @@ int http_filter(struct __sk_buff *skb) {
 	
 	struct char_1 *c;
 	c = cursor_advance(cursor, 1);
+	u32 i = 0;
+
+	#pragma unroll
+
+	while(c->c != '\n' && i < payload_length ){
+		c = cursor_advance(c,1);
+	}
+
+	if(c->c == '\n'){
+		c = cursor_advance(c,1);
+	}else{
+		goto DROP;
+	}
 
 
 	 /*#pragma unroll
@@ -120,7 +133,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(c->c == 'F'){
+	if(c->c == 'R'){
 		goto KEEP;
 	}
 	
