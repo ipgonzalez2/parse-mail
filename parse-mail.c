@@ -17,7 +17,8 @@
 
 struct char_1
 {
-    char c;
+    char c '\n';
+	char b '\n';
 } BPF_PACKET_HEADER;
 
 int http_filter(struct __sk_buff *skb) {
@@ -85,16 +86,7 @@ int http_filter(struct __sk_buff *skb) {
 	//include empty payload
 	
 	struct char_1 *c;
-	struct char_1 *b;
-	c = cursor_advance(cursor, 1);
-	b = cursor_advance(cursor2, 1);
-	b = cursor_advance(cursor2, 1);
-
-	#pragma unroll
-	do{
-		c= cursor_advance(cursor, 1);
-		b = cursor_advance(cursor2, 1);
-	}while((c->c != b->c) && (b->c != '\n'));
+	c = cursor_advance(cursor, sizeof(*c));
 
 
 	/*if(c->c == '\n'){
@@ -132,7 +124,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(b->c == '\n'){
+	if(c->c == 'F' && c->b == 'r'){
 		goto KEEP;
 	}
 	
