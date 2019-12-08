@@ -84,16 +84,18 @@ int http_filter(struct __sk_buff *skb) {
 	u32 i = 0;
 
 	#pragma unroll
-
-	while(c->c != '\n' && i < 3728 ){
-		c = cursor_advance(cursor,1);
+	for(i = 0; i < 4000; i++){
+		c = cursor_advance(cursor, 1);
+		if(c->c == '\n'){
+			break;
+		}
 	}
 
-	if(c->c == '\n'){
+	/*if(c->c == '\n'){
 		c = cursor_advance(cursor,1);
 	}else{
 		goto DROP;
-	}
+	}*/
 
 
 	 /*#pragma unroll
@@ -133,7 +135,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(c->c == 'R'){
+	if(c->c == '\n'){
 		goto KEEP;
 	}
 	
