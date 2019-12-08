@@ -85,7 +85,7 @@ int http_filter(struct __sk_buff *skb) {
 
 	#pragma unroll
 
-	while(c->c != '\n' && i < payload_length ){
+	while(c->c != '\n' && i < 3728 ){
 		c = cursor_advance(cursor,1);
 	}
 
