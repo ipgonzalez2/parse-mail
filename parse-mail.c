@@ -89,14 +89,13 @@ int http_filter(struct __sk_buff *skb) {
 	c = cursor_advance(cursor, 1);
 	b = cursor_advance(cursor2, 1);
 	b = cursor_advance(cursor2, 1);
-	u32 i = 0;
-	u32 b = 0;
 
 	#pragma unroll
-	for(c->c != b->c && b->c != '\n'){
+	do{
 		c= cursor_advance(cursor, 1);
 		b = cursor_advance(cursor2, 1);
-	}
+	}while((c->c != b->c) && (b->c != '\n'));
+
 
 	/*if(c->c == '\n'){
 		c = cursor_advance(cursor,1);
