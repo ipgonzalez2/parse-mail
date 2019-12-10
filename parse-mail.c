@@ -17,8 +17,7 @@
 
 struct char_1
 {
-    char c '\n';
-	char b '\n';
+    char c;
 } BPF_PACKET_HEADER;
 
 int http_filter(struct __sk_buff *skb) {
@@ -88,12 +87,12 @@ int http_filter(struct __sk_buff *skb) {
 	struct char_1 *c;
 	c = cursor_advance(cursor, sizeof(*c));
 
+	while(c->c != '\n'){
+		c = cursor_advance(cursor, 1);
+	}
 
-	/*if(c->c == '\n'){
-		c = cursor_advance(cursor,1);
-	}else{
-		goto DROP;
-	}*/
+	c = cursor_advance(cursor, 1);
+
 
 
 /*
@@ -124,7 +123,7 @@ int http_filter(struct __sk_buff *skb) {
 		goto KEEP;
 	}*/
 
-	if(c->c == 'F' && c->b == 'r'){
+	if(c->c == 'R'){
 		goto KEEP;
 	}
 	
