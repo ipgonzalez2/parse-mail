@@ -63,7 +63,7 @@ int http_filter(struct __sk_buff *skb) {
 	payload_length = ip->tlen - ip_header_length - tcp_header_length;
 	
 	struct char_1 *c;
-	c = cursor_advance(cursor, sizeof(*c));
+	c = cursor_advance(cursor, 1);
 
 	while(c->c != '\n'){
 		c = cursor_advance(cursor, 1);
