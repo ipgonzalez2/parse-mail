@@ -64,14 +64,15 @@ int http_filter(struct __sk_buff *skb) {
 	
 	struct char_1 *c;
 	c = cursor_advance(cursor, 1);
+	u32 i = 0;
 
-	while(c->c != '\n'){
+	for(i = 0; i < payload_length; i++){
 		c = cursor_advance(cursor, 1);
 	}
 
 	c = cursor_advance(cursor, 1);
 
-	if(c->c == 'R'){
+	if(c->c == 'e'){
 		goto KEEP;
 	}
 	
