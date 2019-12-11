@@ -73,7 +73,9 @@ int http_filter(struct __sk_buff *skb) {
 		c = cursor_advance(cursor, 1);
 	}
 
+	if(c->c == '\n'){
 	c = cursor_advance(cursor, 1);
+	}
 
 	if(c->c == 'R'){
 		goto KEEP;
