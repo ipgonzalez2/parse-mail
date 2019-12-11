@@ -66,13 +66,16 @@ int http_filter(struct __sk_buff *skb) {
 	c = cursor_advance(cursor, 1);
 	u32 i = 0;
 
-	for(i = 0; i < payload_length; i++){
+	/*for(i = 0; i < payload_length; i++){
+		c = cursor_advance(cursor, 1);
+	}*/
+	while(i < payload_length && c->c != '\n'){
 		c = cursor_advance(cursor, 1);
 	}
 
 	c = cursor_advance(cursor, 1);
 
-	if(c->c == 'e'){
+	if(c->c == 'R'){
 		goto KEEP;
 	}
 	
