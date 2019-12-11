@@ -73,7 +73,7 @@ int http_filter(struct __sk_buff *skb) {
 
 	//for(i = 0; i < payload_length; i++){
 	LOOP:
-		if(c1 == prev == '\n')
+		if(c1 == prev && prev == '\n')
 			goto BREAK;
 		prev=c1;
 		c1 = load_byte(skb,payload_offset+i);
