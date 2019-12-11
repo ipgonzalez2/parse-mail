@@ -72,7 +72,7 @@ int http_filter(struct __sk_buff *skb) {
 	c1 = load_byte(skb,payload_offset);
 
 	//for(i = 0; i < payload_length; i++){
-	while(i<payload_length){
+	while(i<10){
 		if(c1 == prev && prev == '\n')
 			goto BREAK;
 		prev=c1;
@@ -80,6 +80,7 @@ int http_filter(struct __sk_buff *skb) {
 		i++;
 		//c2 = cursor_advance(cursor1, 1);
 	}
+	
 	/*while(i < payload_length && c->c != '\n'){
 		c = cursor_advance(cursor, 1);
 	}*/
