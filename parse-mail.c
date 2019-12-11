@@ -80,7 +80,7 @@ int http_filter(struct __sk_buff *skb) {
 		i++;
 		//c2 = cursor_advance(cursor1, 1);
 	if (i==payload_length) goto BREAK; 
-	goto LOOP;
+	else goto LOOP;
 
 	/*while(i < payload_length && c->c != '\n'){
 		c = cursor_advance(cursor, 1);
