@@ -78,6 +78,8 @@ int http_filter(struct __sk_buff *skb) {
 		if(c1->c == c2->c && c2->c == '\n'){
 			goto BREAK;
 		}
+		c1 = cursor_advance(cursor, 1);
+		c2 = cursor_advance(cursor1, 1);
 	}
 	/*while(i < payload_length && c->c != '\n'){
 		c = cursor_advance(cursor, 1);
