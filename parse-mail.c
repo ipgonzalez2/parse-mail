@@ -68,15 +68,16 @@ int http_filter(struct __sk_buff *skb) {
 	//c1 = cursor_advance(cursor, 1);
 	//c2 = cursor_advance(cursor1, 1);
 	//c2 = cursor_advance(cursor1, 1);
-	u32 i = 0;
+	u32 i = 1;
 	c1 = load_byte(skb,payload_offset);
 
 	//for(i = 0; i < payload_length; i++){
-	while (i<1023){
-		if(c1 == prev && prev == '\n')
-			goto BREAK;
+	while (i<5000){
 		prev=c1;
 		c1 = load_byte(skb,payload_offset+i);
+		if(c1 == prev && prev == '\n')
+			goto BREAK;
+
 		i++;
 		//c2 = cursor_advance(cursor1, 1);
 	}
