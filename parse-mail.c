@@ -14,17 +14,14 @@ struct char_1
 int http_filter(struct __sk_buff *skb) {
 
 	u8 *cursor = 0;
-	u8 *cursor1 = 0;
 	
 	struct ethernet_t *ethernet = cursor_advance(cursor, sizeof(*ethernet));
-	void *void1 = cursor_advance(cursor, sizeof(*ethernet));
 	//filter IP packets (ethernet type = 0x0800)
 	if (!(ethernet->type == 0x0800)) {
 		goto DROP;
 	}
 
 	struct ip_t *ip = cursor_advance(cursor, sizeof(*ip));
-	void *void2 = cursor_advance(cursor, sizeof(*ip));
 	//filter TCP packets (ip next proocol = 0x06)
 	if (ip->nextp != IP_TCP) {
 		goto DROP;
@@ -47,10 +44,8 @@ int http_filter(struct __sk_buff *skb) {
 
         //shift cursor forward for dynamic ip header size
     void *_ = cursor_advance(cursor, (ip_header_length-sizeof(*ip)));
-	void *void3 = cursor_advance(cursor, (ip_header_length-sizeof(*ip)));
 
 	struct tcp_t *tcp = cursor_advance(cursor, sizeof(*tcp));
-	void *void4 = cursor_advance(cursor, sizeof(*tcp));
 
 	//DE momento pruebas no
 	/*if(tcp->dst_port != 25){
@@ -75,10 +70,10 @@ int http_filter(struct __sk_buff *skb) {
 	//c2 = cursor_advance(cursor1, 1);
 	u32 i = 0;
 
-	for(i = 0; i < payload_length; i++){
-		if(c1->c == prev && prev == '\n'){
+	//for(i = 0; i < payload_length; i++){
+	while(true){
+		if(c1->c == prev && prev == '\n')
 			goto BREAK;
-		}
 		prev=c1->c;
 		c1 = cursor_advance(cursor, 1);
 		//c2 = cursor_advance(cursor1, 1);
