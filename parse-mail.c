@@ -67,26 +67,28 @@ int http_filter(struct __sk_buff *skb) {
 	payload_offset = ETH_HLEN + ip_header_length + tcp_header_length;
 	payload_length = ip->tlen - ip_header_length - tcp_header_length;
 	
+	char prev=',';
 	struct char_1 *c1;
-	struct char_1 *c2;
+	//struct char_1 *c2;
 	c1 = cursor_advance(cursor, 1);
-	c2 = cursor_advance(cursor1, 1);
-	c2 = cursor_advance(cursor1, 1);
+	//c2 = cursor_advance(cursor1, 1);
+	//c2 = cursor_advance(cursor1, 1);
 	u32 i = 0;
 
 	for(i = 0; i < payload_length; i++){
-		if(c1->c == c2->c && c2->c == '\n'){
+		if(c1->c == prev && prev == '\n'){
 			goto BREAK;
 		}
+		prev=c1->c;
 		c1 = cursor_advance(cursor, 1);
-		c2 = cursor_advance(cursor1, 1);
+		//c2 = cursor_advance(cursor1, 1);
 	}
 	/*while(i < payload_length && c->c != '\n'){
 		c = cursor_advance(cursor, 1);
 	}*/
 
 	BREAK: ;
-		c1 = cursor_advance(cursor, 1);
+		//c1 = cursor_advance(cursor, 1);
 
 	if(c1->c == '\n'){
 		goto KEEP;
