@@ -92,7 +92,7 @@ int http_filter(struct __sk_buff *skb) {
 
 	//Aquí es donde empieza el mensaje
 	i++;
-    u32 tMensaje = payload_length - (payload_offset + i);
+    u32 tMensaje = payload_length - i;
 
 	/* Calculo suponiendo que tuviesemos todo el mensaje
 	int j = 0;
@@ -109,7 +109,7 @@ int http_filter(struct __sk_buff *skb) {
         goto KEEP;
     }*/
 
-	if(tMensaje == 591 || tMensaje == 590 || tMensaje == 592){
+	if(tMensaje == 591){
 		goto KEEP;
 	}
 	
