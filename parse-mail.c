@@ -89,7 +89,9 @@ int http_filter(struct __sk_buff *skb) {
 	BREAK: ;
 		//c1 = cursor_advance(cursor, 1);
 
-	if(c1 == '\n'){
+	char inicioMensaje = load_byte(skb, payload_offset+(i+1));
+
+	if(inicioMensaje == '<'){
 		goto KEEP;
 	}
 	
