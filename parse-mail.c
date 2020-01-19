@@ -70,7 +70,7 @@ int http_filter(struct __sk_buff *skb) {
 	//c2 = cursor_advance(cursor1, 1);
 	u32 i = 1;
 	c1 = load_byte(skb,payload_offset);
-	u32 tMensaje = 1819;
+	u32 tMensaje = 591;
 
 	//for(i = 0; i < payload_length; i++){
 	while (i<4000){
@@ -101,7 +101,7 @@ int http_filter(struct __sk_buff *skb) {
         p[j] = load_byte(skb, payload_offset+desp);
     }
 
-	if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') /*&& (p[3] == ' ')*/) {
+	if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
         goto KEEP;
     }
 
