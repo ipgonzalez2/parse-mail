@@ -66,7 +66,7 @@ int http_filter(struct __sk_buff *skb) {
 	u32 i = 1;
 	c1 = load_byte(skb,payload_offset);
 
-	while (i<5000){
+	while (i<4500){
 		prev=c1;
 		c1 = load_byte(skb,payload_offset+i);
 		if(c1 == prev && prev == '\n')
