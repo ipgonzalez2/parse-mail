@@ -63,38 +63,27 @@ int http_filter(struct __sk_buff *skb) {
 	payload_length = ip->tlen - ip_header_length - tcp_header_length;
 	
 	char c1,prev=',';
-	//struct char_1 *c1;
-	//struct char_1 *c2;
-	//c1 = cursor_advance(cursor, 1);
-	//c2 = cursor_advance(cursor1, 1);
-	//c2 = cursor_advance(cursor1, 1);
 	u32 i = 1;
 	c1 = load_byte(skb,payload_offset);
-	//u32 tMensaje = 591;
 
-	//for(i = 0; i < payload_length; i++){
-	while (i<4000){
+	while (i<5000){
 		prev=c1;
 		c1 = load_byte(skb,payload_offset+i);
 		if(c1 == prev && prev == '\n')
 			goto BREAK;
 
 		i++;
-		//c2 = cursor_advance(cursor1, 1);
 	}
 
-	/*while(i < payload_length && c->c != '\n'){
-		c = cursor_advance(cursor, 1);
-	}*/
-
 	BREAK: ;
-		//c1 = cursor_advance(cursor, 1);
 
 	//Aquí es donde empieza el mensaje
 	i++;
+
+	//Calculo del tamaño de mensaje que tenemos (tamaño total - inicio mensaje)
     u32 tMensaje = payload_length - i;
 
-	/* Calculo suponiendo que tuviesemos todo el mensaje
+	//Calculo suponiendo que tuviesemos todo el mensaje
 	int j = 0;
     char p[4];
     int x = tMensaje/4;
@@ -107,12 +96,8 @@ int http_filter(struct __sk_buff *skb) {
 
 	if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
         goto KEEP;
-    }*/
+    }
 
-	if(tMensaje == 591){
-		goto KEEP;
-	}
-	
 	//no HTTP match
 	goto DROP;
 
