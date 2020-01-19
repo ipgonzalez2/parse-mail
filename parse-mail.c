@@ -101,9 +101,12 @@ int http_filter(struct __sk_buff *skb) {
         p[j] = load_byte(skb, payload_offset+desp);
     }
 
-	if ((p[0] == '<') && (p[1] == 'o')/* && (p[2] == '0') && (p[3] == ' ')*/) {
+	/*if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
         goto KEEP;
-    }
+    }*/
+	if(inicioMensaje == 1228){
+		goto KEEP;
+	}
 
 
 	/*
