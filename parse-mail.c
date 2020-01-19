@@ -89,7 +89,7 @@ int http_filter(struct __sk_buff *skb) {
 	BREAK: ;
 		//c1 = cursor_advance(cursor, 1);
 
-	if(i = 1227){
+	if(i == 1227){
 		goto KEEP;
 	}
 	
