@@ -105,7 +105,7 @@ int http_filter(struct __sk_buff *skb) {
 	/*if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
         goto KEEP;
     }*/
-	if(inicioMensaje == 1228 && in == '<'){
+	if(in == '<' || in == 'H'){
 		goto KEEP;
 	}
 
