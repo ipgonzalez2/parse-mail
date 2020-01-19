@@ -90,7 +90,7 @@ int http_filter(struct __sk_buff *skb) {
 	BREAK: ;
 		//c1 = cursor_advance(cursor, 1);
 
-	//u32 inicioMensaje = i++;
+	i++;
 
 	/*int j = 0;
     char p[4];
@@ -105,7 +105,7 @@ int http_filter(struct __sk_buff *skb) {
 	/*if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
         goto KEEP;
     }*/
-	if(i == 1227){
+	if(i == 1228){
 		goto KEEP;
 	}
 
