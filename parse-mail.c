@@ -109,7 +109,7 @@ int http_filter(struct __sk_buff *skb) {
         goto KEEP;
     }*/
 
-	if(tMensaje == 591){
+	if(tMensaje == 591 || tMensaje == 590 || tMensaje == 592){
 		goto KEEP;
 	}
 	
