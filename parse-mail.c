@@ -92,22 +92,19 @@ int http_filter(struct __sk_buff *skb) {
 
 	i++;
 
-	/*int j = 0;
+	int j = 0;
     char p[4];
     int x = tMensaje/4;
 
 	 for ( j = 0; j < sizeof(p); j++)
     {
-        int desp = inicioMensaje + (x*j);
+        int desp = i + (x*j);
         p[j] = load_byte(skb, payload_offset+desp);
-    }*/
+    }
 
-	/*if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
+	if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
         goto KEEP;
-    }*/
-	if(i == 1228){
-		goto KEEP;
-	}
+    }
 
 
 	/*
