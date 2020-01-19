@@ -91,7 +91,7 @@ int http_filter(struct __sk_buff *skb) {
 		//c1 = cursor_advance(cursor, 1);
 
 	u32 inicioMensaje = i++;
-	char in = load_byte(skb, payload_offset+inicioMensaje);
+
 	int j = 0;
     char p[4];
     int x = tMensaje/4;
@@ -105,7 +105,7 @@ int http_filter(struct __sk_buff *skb) {
 	/*if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
         goto KEEP;
     }*/
-	if(in == '<' || in == 'H'){
+	if(inicioMensaje == 1228){
 		goto KEEP;
 	}
 
