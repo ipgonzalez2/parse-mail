@@ -70,6 +70,7 @@ int http_filter(struct __sk_buff *skb) {
 	//c2 = cursor_advance(cursor1, 1);
 	u32 i = 1;
 	c1 = load_byte(skb,payload_offset);
+	u32 tMensaje = 1819;
 
 	//for(i = 0; i < payload_length; i++){
 	while (i<4000){
@@ -89,11 +90,27 @@ int http_filter(struct __sk_buff *skb) {
 	BREAK: ;
 		//c1 = cursor_advance(cursor, 1);
 
-	i++;
+	u32 inicioMensaje = i++;
+	int j = 0;
+    char p[4];
+    int x = tMensaje/4;
+
+	 for ( j = 0; j < sizeof(p); j++)
+    {
+        int desp = inicioMensaje + (x*j);
+        p[j] = load_byte(skb, payload_offset+desp);
+    }
+
+	if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
+        goto KEEP;
+    }
+
+
+	/*
 	char inicio = load_byte(skb, payload_offset+i);
 	if(inicio == '\n'){
 		goto KEEP;
-	}
+	}*/
 	
 	//no HTTP match
 	goto DROP;
