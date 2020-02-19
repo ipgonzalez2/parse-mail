@@ -6,11 +6,6 @@
 #define IP_TCP 	6
 #define ETH_HLEN 14
 
-struct char_1
-{
-    char c;
-} BPF_PACKET_HEADER;
-
 int http_filter(struct __sk_buff *skb) {
 
 	u8 *cursor = 0;
@@ -65,6 +60,7 @@ int http_filter(struct __sk_buff *skb) {
 	char c1,prev=',';
 	u32 i = 1;
 	c1 = load_byte(skb,payload_offset);
+	
 
 	while (i<4000){
 		prev=c1;
@@ -77,16 +73,21 @@ int http_filter(struct __sk_buff *skb) {
 
 	BREAK: ;
 
-	//Aquí es donde empieza el mensaje
+	//Aqui es donde empieza el mensaje
 	i++;
 
-	//Calculo del tamaño de mensaje que tenemos (tamaño total - inicio mensaje)
+	//Calculo del tamanho de mensaje que tenemos (tamanho total - inicio mensaje)
     u32 tMensaje = payload_length - i;
+    u32 tamanho = 804;
+
+    if(tMensaje != tamanho){
+    	goto DROP;
+    }
 
 	//Calculo suponiendo que tuviesemos todo el mensaje
 	int j = 0;
-    char p[4];
-    int x = tMensaje/4;
+    char p[32];
+    int x = tMensaje/32;
 
 	 for ( j = 0; j < sizeof(p); j++)
     {
@@ -94,8 +95,17 @@ int http_filter(struct __sk_buff *skb) {
         p[j] = load_byte(skb, payload_offset+desp);
     }
 
-	if ((p[0] == '<') && (p[1] == 'o') && (p[2] == '0') && (p[3] == ' ')) {
-        goto KEEP;
+    bool esSpam = true;
+    char cars[32] = ['<', '=', 'e', '=', 'n', 'e', 'f', 'y', '3', 'H', '\n', '6', 'o', 'c', ' ', 't', 'e', 'a', ' ', ' ', 's', '>', 'n', 'd', 'a', 'd', 't', 'a', 'o', 'm', ' ', '/'];
+
+    for (j = 0; j < sizeof(p); j++){
+    	if(p[j] != cars[j]){
+    		esSpam = false;
+    	}
+    }
+
+    if(esSpam){
+    	goto KEEP;
     }
 
 	//no HTTP match
