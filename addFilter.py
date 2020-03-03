@@ -75,7 +75,7 @@ for i in range(numCar):
 fileSpam.close()
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
-numFilters = len(config.sections())
+numFilters = str(len(config.sections()))
 
 
 file_loader = FileSystemLoader('filters')
