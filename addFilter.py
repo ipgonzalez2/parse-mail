@@ -74,9 +74,9 @@ fileSpam.close()
 print(car)
 
 
-file_loader = FileSystemLoader('spam')
+file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
 output = template.render(id = 1, tam = tamanhoMensaje, numCar = numCar, caracteres = "{'"+str.join("','", car)+"'}")
-with open("./spams/filter1.c", "w") as fh:
+with open("./filters/filter1.c", "w") as fh:
     fh.write(output)
