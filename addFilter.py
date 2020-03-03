@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 
 from sys import argv
 from os import path
@@ -51,7 +52,31 @@ if len(argv) == 4:
 if len(argv) > 4 or len(argv) < 2:
   usage()
 
+fileSpam = open(file_path, 'r')
+regex = re.compile('\n\n')
+match = re.search(regex, fileSpam.read())
+inicioMensaje = match.end()
+tamanhoTotal = os.stat(file_path).st_size
+tamanhoMensaje = tamanhoTotal - inicioMensaje
+
+numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
+car = []
+x = int(float(tamanhoMensaje/numCar))
+fileSpam = open(file_path, 'r')
+
+for i in range(numCar):
+    desp = inicioMensaje + (x * i)
+    car.append(fileSpam.read()[desp])
+    fileSpam.seek(0,0)
 
 
-print(porcentaje)
-print(file_path)
+fileSpam.close()
+print(car)
+
+
+file_loader = FileSystemLoader('spam')
+env = Environment(loader=file_loader)
+template = env.get_template('filter_template.c')
+output = template.render(id = 1, tam = tamanhoMensaje, numCar = numCar, caracteres = "{'"+str.join("','", car)+"'}")
+with open("./spams/filter1.c", "w") as fh:
+    fh.write(output)
