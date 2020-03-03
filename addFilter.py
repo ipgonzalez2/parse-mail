@@ -1,6 +1,8 @@
 import os
 import sys
 
+from sys import argv
+
 #args
 def usage():
     print("USAGE: %s [-p <percentage_characters>(4,5,6,7)%] spam_file" % argv[0])
