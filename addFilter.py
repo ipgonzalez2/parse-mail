@@ -2,17 +2,18 @@ import os
 import sys
 
 from sys import argv
+from os import path
 
 #args
 def usage():
-    print("USAGE: %s [-p <percentage_characters>(4,5,6,7)%] spam_file" % argv[0])
+    print("USAGE: %s [-p <percentage_characters>(4,5,6,7)] spam_file" % argv[0])
     print("")
     print("Try '%s -h' for more options." % argv[0])
     exit()
 
 #help
 def help():
-    print("USAGE: %s [-p <percentage_characters>(4,5,6,7)%] spam_file" % argv[0])
+    print("USAGE: %s [-p <percentage_characters>(4,5,6,7)] spam_file" % argv[0])
     print("")
     print("optional arguments:")
     print("   -h                       print this help")
@@ -29,7 +30,7 @@ porcentaje = 4
 if len(argv) == 2:
   if str(argv[1]) == '-h':
     help()
-  elif os.path.isFile(argv[1]):
+  elif path.exists(argv[1]):
     file_path = argv[1]  
   else:
     usage()
@@ -41,7 +42,7 @@ if len(argv) == 3:
     usage()
 
 if len(argv) == 4:
-  if str(argv[1]) == '-p' and os.path.isFile(argv[3]):
+  if str(argv[1]) == '-p' and path.exists(argv[3]):
     porcentaje = int(argv[2])
     file_path = argv[3]
   else:
