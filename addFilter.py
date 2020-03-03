@@ -1,6 +1,7 @@
 import os
 import sys
 import re
+import ConfigParser
 
 from jinja2 import Environment, FileSystemLoader
 from sys import argv
@@ -72,7 +73,9 @@ for i in range(numCar):
 
 
 fileSpam.close()
-print(car)
+config = ConfigParser.RawConfigParser()
+config.read("filters.cfg")
+print(len(config.sections()))
 
 
 file_loader = FileSystemLoader('filters')
@@ -81,3 +84,12 @@ template = env.get_template('filter_template.c')
 output = template.render(id = 1, tam = tamanhoMensaje, numCar = numCar, caracteres = "{'"+str.join("','", car)+"'}")
 with open("./filters/filter1.c", "w") as fh:
     fh.write(output)
+
+
+config.add_section('Filtro1')
+config.set('Filtro1', 'programa', 'http-parse-simple.c')
+config.set('Filtro1', 'funcion', 'http_filter')
+
+# Writing our configuration file to 'filtros.cfg'
+with open('filters.cfg', 'wb') as configfile:
+    config.write(configfile)
