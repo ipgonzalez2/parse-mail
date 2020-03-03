@@ -76,6 +76,7 @@ fileSpam.close()
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
 numFilters = str(len(config.sections()))
+print(car)
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
