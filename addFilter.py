@@ -76,16 +76,14 @@ fileSpam.close()
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
 numFilters = str(len(config.sections()))
-print(car)
 caracteres = str(car)
 caracteres = caracteres[:0] + '{' + caracteres[0+1:]
 caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
-print(caracteres)
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
-output = template.render(id = numFilters, tam = tamanhoMensaje, numCar = numCar, caracteres = str("{'"+str.join("','", car)+"'}"))
+output = template.render(id = numFilters, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres)
 with open("./filters/filter"+numFilters+".c", "w") as fh:
     fh.write(output)
 
