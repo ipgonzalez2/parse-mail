@@ -29,6 +29,8 @@ porcentaje = 4
 if len(argv) == 2:
   if str(argv[1]) == '-h':
     help()
+  elif os.path.isFile(argv[1]):
+    file_path = argv[1]  
   else:
     usage()
 
@@ -45,7 +47,7 @@ if len(argv) == 4:
   else:
     usage()
 
-if len(argv) > 4:
+if len(argv) > 4 or len(argv) < 2:
   usage()
 
 
