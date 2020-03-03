@@ -77,6 +77,8 @@ config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
 numFilters = str(len(config.sections()))
 print(car)
+caracteres = str("{'"+str.join("','", car)+"'}")
+print(caracteres)
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
