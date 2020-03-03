@@ -75,20 +75,20 @@ for i in range(numCar):
 fileSpam.close()
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
-print(len(config.sections()))
+numFilters = len(config.sections())
 
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
-output = template.render(id = 1, tam = tamanhoMensaje, numCar = numCar, caracteres = "{'"+str.join("','", car)+"'}")
-with open("./filters/filter1.c", "w") as fh:
+output = template.render(id = numFilters, tam = tamanhoMensaje, numCar = numCar, caracteres = "{'"+str.join("','", car)+"'}")
+with open("./filters/filter"+numFilters+".c", "w") as fh:
     fh.write(output)
 
 
-config.add_section('Filtro1')
-config.set('Filtro1', 'programa', 'http-parse-simple.c')
-config.set('Filtro1', 'funcion', 'http_filter')
+config.add_section('Filter'+numFilters)
+config.set('Filter'+numFilters, 'program', 'filter'+numFilters+'.c')
+config.set('Filter'+numFilters, 'function', 'mail_filter_'+numFilters)
 
 # Writing our configuration file to 'filtros.cfg'
 with open('filters.cfg', 'wb') as configfile:
