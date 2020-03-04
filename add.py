@@ -79,12 +79,12 @@ numFilters = str(len(config.sections()))
 caracteres = str(car)
 caracteres = caracteres[:0] + '{' + caracteres[0+1:]
 caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
-print(len)
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
 output = template.render(id = 0, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres)
+print(numCar)
 with open("./filters/filter0.c", "w") as fh:
     fh.write(output)
 
