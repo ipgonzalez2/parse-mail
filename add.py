@@ -84,15 +84,7 @@ print(len)
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
-output = template.render(id = numFilters, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres)
-with open("./filters/filter"+numFilters+".c", "w") as fh:
+output = template.render(id = 0, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres)
+with open("./filters/filter0.c", "w") as fh:
     fh.write(output)
 
-
-config.add_section('Filter'+numFilters)
-config.set('Filter'+numFilters, 'program', 'filter'+numFilters+'.c')
-config.set('Filter'+numFilters, 'function', 'mail_filter_'+numFilters)
-
-# Writing our configuration file to 'filtros.cfg'
-with open('filters.cfg', 'wb') as configfile:
-    config.write(configfile)
