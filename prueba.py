@@ -65,8 +65,8 @@ config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 
 for filter in config.sections():
-  program = config.get(filter,’program’)
-  function = config.get(filter,’function’)
+  program = config.get(filter,'program')
+  function = config.get(filter,'function')
 
 # initialize BPF - load source code from http-parse-simple.c
   bpf = BPF(src_file = "filters/"+program,debug = 0)
