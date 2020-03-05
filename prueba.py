@@ -91,7 +91,7 @@ for filter in config.sections():
 while 1:
   for filter in config.sections():
   #retrieve raw packet from socket
-   packet_str = os.read(socket_fd+"-"+filter,2048)
+    packet_str = os.read(socket_fd+"-"+filter,2048)
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
