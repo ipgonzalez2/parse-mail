@@ -62,8 +62,6 @@ tamanhoTotal = os.stat(file_path).st_size
 tamanhoMensaje = tamanhoTotal - inicioMensaje
 
 numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
-if numCar > 30:
-  numCar = 30
 car = []
 x = int(float(tamanhoMensaje/numCar))
 fileSpam = open(file_path, 'r')
@@ -75,6 +73,8 @@ for i in range(numCar):
 
 
 fileSpam.close()
+
+#Abrir configuracion
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
 numFilters = str(len(config.sections()))
