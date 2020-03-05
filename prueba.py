@@ -81,27 +81,26 @@ for filter in config.sections():
   BPF.attach_raw_socket(function_http_filter, interface)
 
 #get file descriptor of the socket previously created inside BPF.attach_raw_socket
-  socket_fd+"-"+filter = function_http_filter.sock
+  socket_fd = function_http_filter.sock
 
 #create python socket object, from the file descriptor
-  sock+"-"+filter = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
+  sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
 #set it as blocking socket
-  sock+"-"+filter.setblocking(True)
+  sock.setblocking(True)
 
 while 1:
-  for filter in config.sections():
   #retrieve raw packet from socket
-    packet_str = os.read(socket_fd+"-"+filter,2048)
+  packet_str = os.read(socket_fd,2048)
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
   #print ("%s" % packet_hex)
 
   #convert packet into bytearray
-    packet_bytearray = bytearray(packet_str)
+  packet_bytearray = bytearray(packet_str)
 
   #ethernet header length
-    ETH_HLEN = 14
+  ETH_HLEN = 14
 
   #IP HEADER
   #https://tools.ietf.org/html/rfc791
@@ -118,14 +117,14 @@ while 1:
   #including header and data, in bytes.
 
   #calculate packet total length
-    total_length = packet_bytearray[ETH_HLEN + 2]               #load MSB
-    total_length = total_length << 8                            #shift MSB
-    total_length = total_length + packet_bytearray[ETH_HLEN+3]  #add LSB
+  total_length = packet_bytearray[ETH_HLEN + 2]               #load MSB
+  total_length = total_length << 8                            #shift MSB
+  total_length = total_length + packet_bytearray[ETH_HLEN+3]  #add LSB
 
   #calculate ip header length
-    ip_header_length = packet_bytearray[ETH_HLEN]               #load Byte
-    ip_header_length = ip_header_length & 0x0F                  #mask bits 0..3
-    ip_header_length = ip_header_length << 2                    #shift to obtain length
+  ip_header_length = packet_bytearray[ETH_HLEN]               #load Byte
+  ip_header_length = ip_header_length & 0x0F                  #mask bits 0..3
+  ip_header_length = ip_header_length << 2                    #shift to obtain length
 
   #TCP HEADER
   #https://www.rfc-editor.org/rfc/rfc793.txt
@@ -143,20 +142,20 @@ while 1:
   #e.g. DataOffset = 5 ; TCP Header Length = 5 * 4 byte = 20 byte
 
   #calculate tcp header length
-    tcp_header_length = packet_bytearray[ETH_HLEN + ip_header_length + 12]  #load Byte
-    tcp_header_length = tcp_header_length & 0xF0                            #mask bit 4..7
-    tcp_header_length = tcp_header_length >> 2                              #SHR 4 ; SHL 2 -> SHR 2
+  tcp_header_length = packet_bytearray[ETH_HLEN + ip_header_length + 12]  #load Byte
+  tcp_header_length = tcp_header_length & 0xF0                            #mask bit 4..7
+  tcp_header_length = tcp_header_length >> 2                              #SHR 4 ; SHL 2 -> SHR 2
 
   #calculate payload offset
-    payload_offset = ETH_HLEN + ip_header_length + tcp_header_length
+  payload_offset = ETH_HLEN + ip_header_length + tcp_header_length
   #print first line of the HTTP GET/POST request
   #line ends with 0xOD 0xOA (\r\n)
   #(if we want to print all the header print until \r\n\r\n)
   
-    for i in range (payload_offset-1,len(packet_bytearray)-1):
-      if (packet_bytearray[i]== '\n'):
-        if (packet_bytearray[i-1] == '\n'):
-          break
-      print ("%c" % chr(packet_bytearray[i]), end = "")
-    print("")
+  for i in range (payload_offset-1,len(packet_bytearray)-1):
+    if (packet_bytearray[i]== '\n'):
+      if (packet_bytearray[i-1] == '\n'):
+        break
+    print ("%c" % chr(packet_bytearray[i]), end = "")
+  print("")
 
