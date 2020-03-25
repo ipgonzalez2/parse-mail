@@ -86,7 +86,10 @@ fileSpam.close()
 # Updating the configuration file
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
-numFilter = str(int(config.sections()[-1][6:]) + 1)
+if(len(config.sections()) > 0):
+  numFilter = str(int(config.sections()[-1][6:]) + 1)
+else:
+  numFilter = 0
 
 # Updating array to C
 caracteres = str(car)
