@@ -62,28 +62,35 @@ if len(argv) > 3:
 print ("binding socket to '%s'" % interface)
 
 # initialize BPF - load source code from http-parse-simple.c
-bpf = BPF(src_file = "filters/filter6.c",debug = 0)
+bpf = BPF(src_file = "filters/filter0.c",debug = 0)
+bf1 = BPF(src_file = "filters/filter1.c",debug = 0)
 
 #load eBPF program http_filter of type SOCKET_FILTER into the kernel eBPF vm
 #more info about eBPF program types
 #http://man7.org/linux/man-pages/man2/bpf.2.html
-function_http_filter = bpf.load_func("mail_filter_6", BPF.SOCKET_FILTER)
+function_http_filter = bpf.load_func("mail_filter_0", BPF.SOCKET_FILTER)
+function_http_filter1 = bpf.load_func("mail_filter_1", BPF.SOCKET_FILTER)
 
 #create raw socket, bind it to interface
 #attach bpf program to socket created
 BPF.attach_raw_socket(function_http_filter, interface)
+BPF.attach_raw_socket(function_http_filter1, interface)
 
 #get file descriptor of the socket previously created inside BPF.attach_raw_socket
 socket_fd = function_http_filter.sock
+socket_fd1 = function_http_filter1.sock
 
 #create python socket object, from the file descriptor
 sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
+sock1 = socket.fromfd(socket_fd1,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
 #set it as blocking socket
 sock.setblocking(True)
+sock1.setblocking(True)
 
 while 1:
   #retrieve raw packet from socket
   packet_str = os.read(socket_fd,2048)
+  packet_str1 = os.read(socket_fd1,2048)
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
@@ -91,6 +98,7 @@ while 1:
 
   #convert packet into bytearray
   packet_bytearray = bytearray(packet_str)
+  packet_bytearray1 = bytearray(packet_str1)
 
   #ethernet header length
   ETH_HLEN = 14
@@ -114,10 +122,20 @@ while 1:
   total_length = total_length << 8                            #shift MSB
   total_length = total_length + packet_bytearray[ETH_HLEN+3]  #add LSB
 
+  #calculate packet total length
+  total_length1 = packet_bytearray1[ETH_HLEN + 2]               #load MSB
+  total_length1 = total_length1 << 8                            #shift MSB
+  total_length1 = total_length1 + packet_bytearray1[ETH_HLEN+3]  #add LSB
+
   #calculate ip header length
   ip_header_length = packet_bytearray[ETH_HLEN]               #load Byte
   ip_header_length = ip_header_length & 0x0F                  #mask bits 0..3
   ip_header_length = ip_header_length << 2                    #shift to obtain length
+
+  #calculate ip header length
+  ip_header_length1 = packet_bytearray1[ETH_HLEN]               #load Byte
+  ip_header_length1 = ip_header_length1 & 0x0F                  #mask bits 0..3
+  ip_header_length1 = ip_header_length1 << 2                    #shift to obtain length
 
   #TCP HEADER
   #https://www.rfc-editor.org/rfc/rfc793.txt
@@ -139,8 +157,14 @@ while 1:
   tcp_header_length = tcp_header_length & 0xF0                            #mask bit 4..7
   tcp_header_length = tcp_header_length >> 2                              #SHR 4 ; SHL 2 -> SHR 2
 
+  tcp_header_length1 = packet_bytearray1[ETH_HLEN + ip_header_length1 + 12]  #load Byte
+  tcp_header_length1 = tcp_header_length1 & 0xF0                            #mask bit 4..7
+  tcp_header_length1 = tcp_header_length1 >> 2                              #SHR 4 ; SHL 2 -> SHR 2
+
   #calculate payload offset
   payload_offset = ETH_HLEN + ip_header_length + tcp_header_length
+
+  payload_offset1 = ETH_HLEN + ip_header_length1 + tcp_header_length1
   #print first line of the HTTP GET/POST request
   #line ends with 0xOD 0xOA (\r\n)
   #(if we want to print all the header print until \r\n\r\n)
@@ -150,5 +174,12 @@ while 1:
       if (packet_bytearray[i-1] == '\n'):
         break
     print ("%c" % chr(packet_bytearray[i]), end = "")
+  print("")
+
+  for i in range (payload_offset1-1,len(packet_bytearray1)-1):
+    if (packet_bytearray1[i]== '\n'):
+      if (packet_bytearray1[i-1] == '\n'):
+        break
+    print ("%c" % chr(packet_bytearray1[i]), end = "")
   print("")
 
