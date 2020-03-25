@@ -69,7 +69,7 @@ bf1 = BPF(src_file = "filters/filter1.c",debug = 0)
 #more info about eBPF program types
 #http://man7.org/linux/man-pages/man2/bpf.2.html
 function_http_filter = bpf.load_func("mail_filter_0", BPF.SOCKET_FILTER)
-function_http_filter1 = bpf.load_func("mail_filter_1", BPF.SOCKET_FILTER)
+function_http_filter1 = bpf1.load_func("mail_filter_1", BPF.SOCKET_FILTER)
 
 #create raw socket, bind it to interface
 #attach bpf program to socket created
