@@ -63,7 +63,7 @@ print ("binding socket to '%s'" % interface)
 
 # initialize BPF - load source code from http-parse-simple.c
 bpf = BPF(src_file = "filters/filter0.c",debug = 0)
-bf1 = BPF(src_file = "filters/filter1.c",debug = 0)
+bpf1 = BPF(src_file = "filters/filter1.c",debug = 0)
 
 #load eBPF program http_filter of type SOCKET_FILTER into the kernel eBPF vm
 #more info about eBPF program types
