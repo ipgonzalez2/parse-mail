@@ -89,7 +89,7 @@ config.read("filters.cfg")
 if(len(config.sections()) > 0):
   numFilter = str(int(config.sections()[-1][6:]) + 1)
 else:
-  numFilter = 0
+  numFilter = str(0)
 
 # Updating array to C
 caracteres = str(car)
