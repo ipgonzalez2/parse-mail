@@ -90,7 +90,7 @@ sock1.setblocking(True)
 while 1:
   #retrieve raw packet from socket
   packet_str = os.read(socket_fd,2048)
-  packet_str1 = os.read(socket_fd1,2048)
+  
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
@@ -98,7 +98,6 @@ while 1:
 
   #convert packet into bytearray
   packet_bytearray = bytearray(packet_str)
-  packet_bytearray1 = bytearray(packet_str1)
 
   #ethernet header length
   ETH_HLEN = 14
@@ -122,19 +121,10 @@ while 1:
   total_length = total_length << 8                            #shift MSB
   total_length = total_length + packet_bytearray[ETH_HLEN+3]  #add LSB
 
-  total_length1 = packet_bytearray1[ETH_HLEN + 2]               #load MSB
-  total_length1 = total_length1 << 8                            #shift MSB
-  total_length1 = total_length1 + packet_bytearray1[ETH_HLEN+3]  #add LSB
-
   #calculate ip header length
   ip_header_length = packet_bytearray[ETH_HLEN]               #load Byte
   ip_header_length = ip_header_length & 0x0F                  #mask bits 0..3
   ip_header_length = ip_header_length << 2                    #shift to obtain length
-
-  #calculate ip header length
-  ip_header_length1 = packet_bytearray1[ETH_HLEN]               #load Byte
-  ip_header_length1 = ip_header_length1 & 0x0F                  #mask bits 0..3
-  ip_header_length1 = ip_header_length1 << 2                    #shift to obtain length
 
 
   #TCP HEADER
@@ -157,16 +147,9 @@ while 1:
   tcp_header_length = tcp_header_length & 0xF0                            #mask bit 4..7
   tcp_header_length = tcp_header_length >> 2                              #SHR 4 ; SHL 2 -> SHR 2
 
-  tcp_header_length1 = packet_bytearray1[ETH_HLEN + ip_header_length1 + 12]  #load Byte
-  tcp_header_length1 = tcp_header_length1 & 0xF0                            #mask bit 4..7
-  tcp_header_length1 = tcp_header_length1 >> 2                              #SHR 4 ; SHL 2 -> SHR 2
-
 
   #calculate payload offset
   payload_offset = ETH_HLEN + ip_header_length + tcp_header_length
-
-  #calculate payload offset
-  payload_offset1 = ETH_HLEN + ip_header_length1 + tcp_header_length1
 
   #print first line of the HTTP GET/POST request
   #line ends with 0xOD 0xOA (\r\n)
@@ -177,13 +160,6 @@ while 1:
       if (packet_bytearray[i-1] == '\n'):
         break
     print ("%c" % chr(packet_bytearray[i]), end = "")
-  print("")
-
-  for i in range (payload_offset1-1,len(packet_bytearray1)-1):
-    if (packet_bytearray1[i]== '\n'):
-      if (packet_bytearray1[i-1] == '\n'):
-        break
-    print ("%c" % chr(packet_bytearray1[i]), end = "")
   print("")
 
 

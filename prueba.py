@@ -64,33 +64,42 @@ print ("binding socket to '%s'" % interface)
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 
+bpf = []
+function_http_filter = []
+socket_fd = []
+sock = []
+
 for filter in config.sections():
   program = config.get(filter,'program')
   function = config.get(filter,'function')
 
 # initialize BPF - load source code from http-parse-simple.c
-  bpf = BPF(src_file = "filters/"+program,debug = 0)
+  bpf.append(BPF(src_file = "filters/"+program,debug = 0))
+  #bpf = BPF(src_file = "filters/"+program,debug = 0)
 
 #load eBPF program http_filter of type SOCKET_FILTER into the kernel eBPF vm
 #more info about eBPF program types
 #http://man7.org/linux/man-pages/man2/bpf.2.html
-  function_http_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
+  #function_http_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
+  function_http_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
 
 #create raw socket, bind it to interface
 #attach bpf program to socket created
-  BPF.attach_raw_socket(function_http_filter, interface)
+  BPF.attach_raw_socket(function_http_filter[-1], interface)
 
 #get file descriptor of the socket previously created inside BPF.attach_raw_socket
-  socket_fd = function_http_filter.sock
+  #socket_fd = function_http_filter.sock
+  socket_fd.append(function_http_filter[-1].sock)
 
 #create python socket object, from the file descriptor
-  sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
+  #sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
+  sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
 #set it as blocking socket
-  sock.setblocking(True)
+  sock[-1].setblocking(True)
 
 while 1:
   #retrieve raw packet from socket
-  packet_str = os.read(socket_fd,2048)
+  packet_str = os.read(socket_fd[-1],2048)
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
