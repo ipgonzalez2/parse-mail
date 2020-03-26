@@ -70,6 +70,7 @@ socket_fd = []
 sock = []
 
 for filter in config.sections():
+  print(program)
   program = config.get(filter,'program')
   function = config.get(filter,'function')
 
