@@ -70,7 +70,6 @@ socket_fd = []
 sock = []
 
 for filter in config.sections():
-  print(program)
   program = config.get(filter,'program')
   function = config.get(filter,'function')
 
@@ -101,7 +100,7 @@ for filter in config.sections():
 
 while 1:
   #retrieve raw packet from socket
-  packet_str = os.read(socket_fd[1],2048)
+  packet_str = os.read(socket_fd[0],2048)
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
