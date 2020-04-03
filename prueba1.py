@@ -62,34 +62,28 @@ if len(argv) > 3:
 print ("binding socket to '%s'" % interface)
 
 # initialize BPF - load source code from http-parse-simple.c
-bpf = BPF(src_file = "filters/filter0.c",debug = 0)
-bpf1 = BPF(src_file = "filters/filter1.c",debug = 0)
+bpf = BPF(src_file = "filters/filter3.c",debug = 0)
 
 #load eBPF program http_filter of type SOCKET_FILTER into the kernel eBPF vm
 #more info about eBPF program types
 #http://man7.org/linux/man-pages/man2/bpf.2.html
-function_http_filter = bpf.load_func("mail_filter_0", BPF.SOCKET_FILTER)
-function_http_filter1 = bpf1.load_func("mail_filter_1", BPF.SOCKET_FILTER)
+function_http_filter = bpf.load_func("mail_filter_3", BPF.SOCKET_FILTER)
 
 #create raw socket, bind it to interface
 #attach bpf program to socket created
 BPF.attach_raw_socket(function_http_filter, interface)
-BPF.attach_raw_socket(function_http_filter1, interface)
 
 #get file descriptor of the socket previously created inside BPF.attach_raw_socket
 socket_fd = function_http_filter.sock
-socket_fd1 = function_http_filter1.sock
 
 #create python socket object, from the file descriptor
 sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
-sock1 = socket.fromfd(socket_fd1,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
 #set it as blocking socket
 sock.setblocking(True)
-sock1.setblocking(True)
 
 while 1:
   #retrieve raw packet from socket
-  packet_str = os.read(socket_fd1,2048)
+  packet_str = os.read(socket_fd,2048)
   
 
   #DEBUG - print raw packet in hex format
