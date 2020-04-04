@@ -100,7 +100,7 @@ for filter in config.sections():
 
 while 1:
   #retrieve raw packet from socket
-  packet_str = os.read(socket_fd[4],2048)
+  packet_str = os.read(socket_fd[5],2048)
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
