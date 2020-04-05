@@ -105,7 +105,7 @@ print(caracteres.replace("\\'", "\'"))
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
-output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres)
+output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("\\'", "\'"))
 with open("./filters/filter"+numFilter+".c", "w") as fh:
     fh.write(output)
 
