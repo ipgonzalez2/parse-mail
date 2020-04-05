@@ -155,6 +155,6 @@ while 1:
         break
     print ("%c" % chr(packet_bytearray[i]), end = "")
   print("")"""
-  print(payload_offset)
+  print("SPAM")
 
 
