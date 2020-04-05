@@ -100,12 +100,12 @@ caracteres = str(car)
 caracteres = caracteres[:0] + '{' + caracteres[0+1:]
 caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
 print(caracteres)
-print(caracteres.replace('comilla', "hola"))
+print(caracteres.replace('comilla', "\'"))
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
-output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("\\'", '\''))
+output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("comilla", '\''))
 with open("./filters/filter"+numFilter+".c", "w") as fh:
     fh.write(output)
 
