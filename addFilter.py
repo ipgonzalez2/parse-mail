@@ -66,6 +66,8 @@ inicioMensaje = match.end()
 tamanhoTotal = os.stat(file_path).st_size
 tamanhoMensaje = tamanhoTotal - inicioMensaje
 
+print("Inicio mensaje " + inicioMensaje)
+
 # Num of characters to match (max 30)
 numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
 if numCar > 30:
