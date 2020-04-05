@@ -85,7 +85,6 @@ for i in range(numCar):
       car.append(caracter)
     fileSpam.seek(0,0)
 
-print(car)
 fileSpam.close()
 
 # Updating the configuration file
@@ -100,6 +99,7 @@ else:
 caracteres = str(car)
 caracteres = caracteres[:0] + '{' + caracteres[0+1:]
 caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
+print(caracteres)
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
