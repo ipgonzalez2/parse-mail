@@ -149,11 +149,12 @@ while 1:
   #line ends with 0xOD 0xOA (\r\n)
   #(if we want to print all the header print until \r\n\r\n)
   
-  for i in range (payload_offset-1,len(packet_bytearray)-1):
+  """for i in range (payload_offset-1,len(packet_bytearray)-1):
     if (packet_bytearray[i]== '\n'):
       if (packet_bytearray[i-1] == '\n'):
         break
     print ("%c" % chr(packet_bytearray[i]), end = "")
-  print("")
+  print("")"""
+  print(packet_bytearray)
 
 
