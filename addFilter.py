@@ -78,7 +78,11 @@ fileSpam = open(file_path, 'r')
 
 for i in range(numCar):
     desp = inicioMensaje + (x * i)
-    car.append(fileSpam.read()[desp])
+    caracter = fileSpam.read()[desp]
+    if caracter == "'" :
+      car.append('\'')
+    else:
+      car.append(caracter)
     fileSpam.seek(0,0)
 
 fileSpam.close()
