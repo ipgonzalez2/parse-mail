@@ -100,7 +100,7 @@ caracteres = str(car)
 caracteres = caracteres[:0] + '{' + caracteres[0+1:]
 caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
 print(caracteres)
-print(caracteres.replace("\\'", '\''))
+print(caracteres.replace("\"\\'\"", "\'\'\'"))
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
