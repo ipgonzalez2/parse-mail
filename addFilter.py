@@ -80,7 +80,7 @@ for i in range(numCar):
     desp = inicioMensaje + (x * i)
     caracter = fileSpam.read()[desp]
     if caracter == "'":
-      car.append(str("\\'"))
+      car.append(str('comilla'))
     else:
       car.append(caracter)
     fileSpam.seek(0,0)
@@ -100,7 +100,7 @@ caracteres = str(car)
 caracteres = caracteres[:0] + '{' + caracteres[0+1:]
 caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
 print(caracteres)
-print(caracteres.replace("\"\\'\"", "hola"))
+print(caracteres.replace('comilla', "hola"))
 
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
