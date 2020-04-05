@@ -80,7 +80,7 @@ for i in range(numCar):
     desp = inicioMensaje + (x * i)
     caracter = fileSpam.read()[desp]
     if caracter == "'":
-      car.append('epa')
+      car.append('\\'')
     else:
       car.append(caracter)
     fileSpam.seek(0,0)
