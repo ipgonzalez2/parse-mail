@@ -85,6 +85,7 @@ for i in range(numCar):
       car.append(caracter)
     fileSpam.seek(0,0)
 
+print(car)
 fileSpam.close()
 
 # Updating the configuration file
