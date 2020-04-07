@@ -101,9 +101,7 @@ for filter in config.sections():
 while 1:
   #retrieve raw packet from socket
   for i in socket_fd:
-    if(os.read(i, 2048)):
-
-      print(bytearray(os.read(i,1000000)))
+    print(bytearray(os.read(i,1000000)))
 
   
 
