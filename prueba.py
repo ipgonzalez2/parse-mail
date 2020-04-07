@@ -101,7 +101,11 @@ for filter in config.sections():
 while 1:
   #retrieve raw packet from socket
   for i in socket_fd:
-    print(bytearray(os.read(i,2048)))
+    if(os.read(i, 2048)):
+
+      print(bytearray(os.read(i,1000000)))
+
+  
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
