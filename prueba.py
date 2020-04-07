@@ -100,17 +100,18 @@ for filter in config.sections():
 
 while 1:
   #retrieve raw packet from socket
-  packet_str = os.read(socket_fd[3],2048)
+  for i in socket_fd:
+    print(bytearray(os.read(i,2048)))
 
   #DEBUG - print raw packet in hex format
   #packet_hex = toHex(packet_str)
   #print ("%s" % packet_hex)
 
   #convert packet into bytearray
-  packet_bytearray = bytearray(packet_str)
+  #packet_bytearray = bytearray(packet_str)
 
   #ethernet header length
-  ETH_HLEN = 14
+  """ETH_HLEN = 14
 
   #IP HEADER
   #https://tools.ietf.org/html/rfc791
@@ -167,5 +168,5 @@ while 1:
       if (packet_bytearray[i-1] == '\n'):
         break
     print ("%c" % chr(packet_bytearray[i]), end = "")
-  print("")
+  print("")"""
 
