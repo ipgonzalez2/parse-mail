@@ -118,7 +118,7 @@ output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, 
 with open("./filters/filter"+numFilter+".c", "w") as fh:
     fh.write(output)
 
-print(limit)
+print(int(limit))
 # Adding section to configuration file
 config.add_section('Filter'+numFilter)
 config.set('Filter'+numFilter, 'program', 'filter'+numFilter+'.c')
