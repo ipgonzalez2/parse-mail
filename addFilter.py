@@ -114,11 +114,10 @@ caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
-output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("comilla", "\\'"), limit = limit)
+output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("comilla", "\\'"), limit = int(limit))
 with open("./filters/filter"+numFilter+".c", "w") as fh:
     fh.write(output)
 
-print(int(limit))
 # Adding section to configuration file
 config.add_section('Filter'+numFilter)
 config.set('Filter'+numFilter, 'program', 'filter'+numFilter+'.c')
