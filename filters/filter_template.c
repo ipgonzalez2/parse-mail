@@ -89,7 +89,7 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
 	int j = 0;
     char p[{{numCar}}];
 
-	x = {{x}};
+	int x = {{x}};
 
 	 for ( j = 0; j < sizeof(p); j++)
     {
