@@ -89,8 +89,9 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
 	//Comprobacion de caracteres aleatorios
 	int j = 0;
     char p[{{numCar}}];
+
 	if(limit == 1){
-		int x = (tamanho - i) / {{numCar}};
+		int x = (15000 - i) / {{numCar}};
 	}else{
 		int x = tMensaje/{{numCar}};
 	}
