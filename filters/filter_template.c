@@ -88,6 +88,7 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
 
 	//Comprobacion de caracteres aleatorios
 	int j = 0;
+	int x;
     char p[{{numCar}}];
 
 	if(limit == 1){
