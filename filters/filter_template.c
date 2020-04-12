@@ -84,7 +84,7 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
     	goto DROP;
     }*/
 
-	limit = {{limit}};
+	int limit = {{limit}};
 
 	//Comprobacion de caracteres aleatorios
 	int j = 0;
