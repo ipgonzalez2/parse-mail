@@ -65,17 +65,26 @@ match = re.search(regex, fileSpam.read())
 inicioMensaje = match.end()
 tamanhoTotal = os.stat(file_path).st_size
 tamanhoMensaje = tamanhoTotal - inicioMensaje
+limit = False
 
-print("Inicio mensaje " + str(inicioMensaje))
-
+if tamanhoTotal > 15000:
+  numCar = int(float(15000*float((float(porcentaje)/100))))
+  limit = True
+else:
 # Num of characters to match (max 30)
-numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
+  numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
+
 if numCar > 30:
   numCar = 30
 
 # Creating array of characters for the filter
 car = []
-x = int(float(tamanhoMensaje/numCar))
+
+if limit:
+  x = int(float((15000 - inicioMensaje)/numCar))
+else:
+  x = int(float(tamanhoMensaje/numCar))
+
 fileSpam = open(file_path, 'r')
 
 for i in range(numCar):
@@ -105,7 +114,7 @@ caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
-output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("comilla", "\\'"))
+output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("comilla", "\\'"), limit = limit)
 with open("./filters/filter"+numFilter+".c", "w") as fh:
     fh.write(output)
 

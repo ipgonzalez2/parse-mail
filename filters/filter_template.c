@@ -80,14 +80,20 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
     u32 tMensaje = payload_length - i;
     u32 tamanho = {{tam}};
 
-    if(tMensaje != tamanho){
+    /*if(tMensaje != tamanho){
     	goto DROP;
-    }
+    }*/
+
+	limit = {{limit}};
 
 	//Comprobacion de caracteres aleatorios
 	int j = 0;
     char p[{{numCar}}];
-    int x = tMensaje/{{numCar}};
+	if(limit){
+		int x = (tamanho - i) / {{numCar}};
+	}else{
+		int x = tMensaje/{{numCar}};
+	}
 
 	 for ( j = 0; j < sizeof(p); j++)
     {
