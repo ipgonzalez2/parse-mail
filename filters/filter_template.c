@@ -84,18 +84,12 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
     	goto DROP;
     }*/
 
-	int limit = {{limit}};
 
 	//Comprobacion de caracteres aleatorios
 	int j = 0;
-	int x;
     char p[{{numCar}}];
 
-	if(limit == 1){
-		int x = (15000 - i) / {{numCar}};
-	}else{
-		int x = tMensaje/{{numCar}};
-	}
+	x = {{x}};
 
 	 for ( j = 0; j < sizeof(p); j++)
     {
