@@ -54,11 +54,14 @@ with open(file_path, 'rb') as f:
         file_hash.update(fb)
         fb = f.read(BLOCK_SIZE)
 hash_summary = file_hash.hexdigest()
+print("Resumen spam a borrar: " + hash_summary)
 
 # Searching for summary in the configuration file and removing filter
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
 for section in config.sections():
+    print(config.get(section, 'hash'))
+    print(config.get(section, 'hash') == hash_summary)
     if config.get(section, 'hash') == hash_summary:
         if os.path.exists("./filters/" + config.get(section, 'function')):
             os.remove("./filters/" + config.get(section, 'function'))
