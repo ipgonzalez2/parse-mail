@@ -64,3 +64,7 @@ for section in config.sections():
         if os.path.exists("./filters/" + config.get(section, 'program')):
             os.remove("./filters/" + config.get(section, 'program'))
         config.remove_section(section)
+        
+# Writing our configuration file to 'filters.cfg'
+with open('filters.cfg', 'wb') as configfile:
+    config.write(configfile)
