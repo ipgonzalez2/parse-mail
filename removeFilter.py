@@ -2,14 +2,14 @@ import os
 import sys
 import re
 import ConfigParser
+import hashlib
 
-from jinja2 import Environment, FileSystemLoader
 from sys import argv
 from os import path
 
 #args
 def usage():
-    print("USAGE: spam_file" % argv[0])
+    print("USAGE: %s spam_file" % argv[0])
     print("")
     print("Try '%s -h' for more options." % argv[0])
     exit()
@@ -22,8 +22,11 @@ def help():
     print("   -h                       print this help")
     print("")
     print("examples:")
-    print("    addFilter spam.eml             # remove filter to spam.eml")
+    print("    removeFilter spam.eml             # removes filter relative to spam.eml")
     exit()
+
+#arguments
+porcentaje = 4
 
 if len(argv) == 2:
   if str(argv[1]) == '-h':
@@ -34,69 +37,29 @@ if len(argv) == 2:
     usage()
 
 if len(argv) == 3:
-  if str(argv[1]) == '-p':
+  if str(argv[1]) == '-h':
     help()
   else:
     usage()
 
-if len(argv) < 2 or len(argv) > 3:
+if len(argv) > 3 or len(argv) < 2:
   usage()
 
-# Open given spam to be filtered 
-fileSpam = open(file_path, 'r')
+# Calculating hash of file
+BLOCK_SIZE = 65536
+file_hash = hashlib.sha256()
+with open(file_path, 'rb') as f:
+    fb = f.read(BLOCK_SIZE)
+    while len(fb) > 0:
+        file_hash.update(fb)
+        fb = f.read(BLOCK_SIZE)
+hash_summary = file_hash.hexdigest()
 
-# Creates regular expression to find where the message begins
-regex = re.compile('\n\n')
-match = re.search(regex, fileSpam.read())
-
-# Calculating where the message begins and his size
-inicioMensaje = match.end()
-tamanhoTotal = os.stat(file_path).st_size
-tamanhoMensaje = tamanhoTotal - inicioMensaje
-
-# Num of characters to match (max 30)
-numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
-if numCar > 30:
-  numCar = 30
-
-# Creating array of characters for the filter
-car = []
-x = int(float(tamanhoMensaje/numCar))
-fileSpam = open(file_path, 'r')
-
-for i in range(numCar):
-    desp = inicioMensaje + (x * i)
-    car.append(fileSpam.read()[desp])
-    fileSpam.seek(0,0)
-
-fileSpam.close()
-
-# Updating the configuration file
+# Searching for summary in the configuration file and removing filter
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
-if(len(config.sections()) > 0):
-  numFilter = str(int(config.sections()[-1][6:]) + 1)
-else:
-  numFilter = str(0)
-
-# Updating array to C
-caracteres = str(car)
-caracteres = caracteres[:0] + '{' + caracteres[0+1:]
-caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
-
-file_loader = FileSystemLoader('filters')
-env = Environment(loader=file_loader)
-template = env.get_template('filter_template.c')
-output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres)
-with open("./filters/filter"+numFilter+".c", "w") as fh:
-    fh.write(output)
-
-
-# Adding section to configuration file
-config.add_section('Filter'+numFilter)
-config.set('Filter'+numFilter, 'program', 'filter'+numFilter+'.c')
-config.set('Filter'+numFilter, 'function', 'mail_filter_'+numFilter)
-
-# Writing our configuration file to 'filters.cfg'
-with open('filters.cfg', 'wb') as configfile:
-    config.write(configfile)
+for section in config.sections():
+    if config.get(section, 'hash') == hash_summary:
+        if os.path.exists("./filters/" + config.get(section, 'function')):
+            os.remove("./filters/" + config.get(section, 'function'))
+        config.remove_section(section)
