@@ -2,6 +2,7 @@ import os
 import sys
 import re
 import ConfigParser
+import hashlib
 
 from jinja2 import Environment, FileSystemLoader
 from sys import argv
@@ -111,6 +112,7 @@ caracteres = str(car)
 caracteres = caracteres[:0] + '{' + caracteres[0+1:]
 caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
 
+# Adding filter to directory
 file_loader = FileSystemLoader('filters')
 env = Environment(loader=file_loader)
 template = env.get_template('filter_template.c')
@@ -118,10 +120,20 @@ output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, 
 with open("./filters/filter"+numFilter+".c", "w") as fh:
     fh.write(output)
 
+# Calculating hash of file
+BLOCK_SIZE = 65536
+file_hash = hashlib.sha256()
+with open(file_path, 'rb') as f:
+    fb = f.read(BLOCK_SIZE)
+    while len(fb) > 0:
+        file_hash.update(fb)
+        fb = f.read(BLOCK_SIZE)
+
 # Adding section to configuration file
 config.add_section('Filter'+numFilter)
 config.set('Filter'+numFilter, 'program', 'filter'+numFilter+'.c')
 config.set('Filter'+numFilter, 'function', 'mail_filter_'+numFilter)
+config.set('Filter'+numFilter, 'hash', file_hash.hexdigest())
 
 # Writing our configuration file to 'filters.cfg'
 with open('filters.cfg', 'wb') as configfile:
