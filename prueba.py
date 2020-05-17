@@ -28,6 +28,7 @@ mask = pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
 class EventHandler(pyinotify.ProcessEvent):
   def process_IN_MOVED_TO(self, event):
     print("Creating:", event.pathname)
+    os.system("sudo python addFilter.py " + event.pathname)
   
   
   def process_IN_DELETE(self, event):
