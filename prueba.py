@@ -97,7 +97,8 @@ def notifier():
 
 def printing():
   while 1:
-   print(bytearray(os.read(socket_fd[-1],100000)))
+    if len(socket_fd>0):
+      print(bytearray(os.read(socket_fd[-1],100000)))
 
 
 
