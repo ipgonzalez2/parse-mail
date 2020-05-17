@@ -24,17 +24,30 @@ import pyinotify
 
 wm = pyinotify.WatchManager()
 mask = pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
+bpf = []
+function_http_filter = []
+socket_fd = []
+sock = []
+config = ConfigParser.RawConfigParser()
+config.read('filters.cfg')
+interface = config.get('settings', 'interface')
 
 class EventHandler(pyinotify.ProcessEvent):
   def process_IN_MOVED_TO(self, event):
     print("Creating:", event.pathname)
     os.system("sudo python addFilter.py " + event.pathname)
-  
+    program = config.get(config.sections()[-1], 'program')
+    function = config.get(config.sections()[-1], 'function')
+    bpf.append(BPF(src_file = "filters/"+program,debug = 0))
+    function_http_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
+    BPF.attach_raw_socket(function_http_filter[-1], interface)
+    socket_fd.append(function_http_filter[-1].sock)
+    sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
+    sock[-1].setblocking(True)
+
   
   def process_IN_DELETE(self, event):
     print("Removing:", event.pathname)
-
-
 
 
 #args
@@ -74,13 +87,7 @@ if len(argv) > 3:
 
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
-interface = config.get('settings', 'interface')
 print ("binding socket to '%s'" % interface)
-
-bpf = []
-function_http_filter = []
-socket_fd = []
-sock = []
 
 for filter in config.sections()[1:]:
   program = config.get(filter,'program')
