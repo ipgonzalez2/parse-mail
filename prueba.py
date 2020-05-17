@@ -45,6 +45,7 @@ class EventHandler(pyinotify.ProcessEvent):
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
     sock[-1].setblocking(True)
     print(socket_fd)
+    print(bytearray(os.read(socket_fd[-1],100000)))
 
   
   def process_IN_DELETE(self, event):
