@@ -45,7 +45,10 @@ class EventHandler(pyinotify.ProcessEvent):
     socket_fd.append(function_http_filter[-1].sock)
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
     sock[-1].setblocking(True)
-    printing()
+    print(bpf)
+    print(function_http_filter)
+    print(socket_fd)
+    print(sock)
 
   
   def process_IN_DELETE(self, event):
@@ -92,11 +95,6 @@ def notifier():
   wdd = wm.add_watch('/home/inesp', mask, rec=False)
   import asyncore
   asyncore.loop()
-
-
-def printing():
-  while 1:
-    print(bytearray(os.read(socket_fd[-1],100000)))
 
 
 
