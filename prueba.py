@@ -41,9 +41,6 @@ def help():
     print("    http-parse -i wlan0     # bind socket to wlan0")
     exit()
 
-#arguments
-interface="eth0"
-
 if len(argv) == 2:
   if str(argv[1]) == '-h':
     help()
@@ -59,17 +56,17 @@ if len(argv) == 3:
 if len(argv) > 3:
   usage()
 
-print ("binding socket to '%s'" % interface)
-
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
+interface = config.get('settings', 'interface')
+print ("binding socket to '%s'" % interface)
 
 bpf = []
 function_http_filter = []
 socket_fd = []
 sock = []
 
-for filter in config.sections():
+for filter in config.sections()[1:]:
   program = config.get(filter,'program')
   function = config.get(filter,'function')
 

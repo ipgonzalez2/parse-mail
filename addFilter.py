@@ -55,6 +55,10 @@ if len(argv) == 4:
 if len(argv) > 4 or len(argv) < 2:
   usage()
 
+config = ConfigParser.RawConfigParser()
+config.read('filters.cfg')
+porcentaje = config.get('settings','percentage')
+
 # Open given spam to be filtered 
 fileSpam = open(file_path, 'r')
 
@@ -102,7 +106,7 @@ fileSpam.close()
 # Updating the configuration file
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
-if(len(config.sections()) > 0):
+if(len(config.sections()) > 1):
   numFilter = str(int(config.sections()[-1][6:]) + 1)
 else:
   numFilter = str(0)

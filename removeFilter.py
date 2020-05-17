@@ -58,9 +58,8 @@ hash_summary = file_hash.hexdigest()
 # Searching for summary in the configuration file and removing filter
 config = ConfigParser.RawConfigParser()
 config.read("filters.cfg")
-for section in config.sections():
+for section in config.sections()[1:]:
     if config.get(section, 'hash') == hash_summary:
-        print("COINCIDE")
         if os.path.exists("./filters/" + config.get(section, 'program')):
             os.remove("./filters/" + config.get(section, 'program'))
         config.remove_section(section)
