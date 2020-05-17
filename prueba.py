@@ -95,9 +95,8 @@ def notifier():
 
 
 def hola():
-  while 1:
-    for i in socket_fd:
-      print(bytearray(os.read(i,100000)))
+  for i in socket_fd:
+    print(bytearray(os.read(i,100000)))
 
 
 
