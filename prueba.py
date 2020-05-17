@@ -119,12 +119,13 @@ for filter in config.sections()[1:]:
 #set it as blocking socket
   sock[-1].setblocking(True)
 
-
-while 1:
   notifier = pyinotify.AsyncNotifier(wm, EventHandler())
   wdd = wm.add_watch('/home/inesp', mask, rec=False)
   import asyncore
   asyncore.loop()
+
+
+while 1:
   #retrieve raw packet from socket
   for i in socket_fd:
     print(bytearray(os.read(i,100000)))
