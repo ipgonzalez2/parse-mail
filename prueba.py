@@ -17,6 +17,7 @@ from bcc import BPF
 from sys import argv
 
 import sys
+import threading
 import socket
 import os
 import ConfigParser
@@ -51,6 +52,47 @@ class EventHandler(pyinotify.ProcessEvent):
   def process_IN_DELETE(self, event):
     print("Removing:", event.pathname)
     os.system("sudo python removeFilter.py " + event.pathname)
+
+
+def filter():
+  config = ConfigParser.RawConfigParser()
+  config.read('filters.cfg')
+  print ("binding socket to '%s'" % interface)
+
+  for filter in config.sections()[1:]:
+    program = config.get(filter,'program')
+    function = config.get(filter,'function')
+
+  # initialize BPF - load source code from http-parse-simple.c
+    bpf.append(BPF(src_file = "filters/"+program,debug = 0))
+    #bpf = BPF(src_file = "filters/"+program,debug = 0)
+
+  #load eBPF program http_filter of type SOCKET_FILTER into the kernel eBPF vm
+  #more info about eBPF program types
+  #http://man7.org/linux/man-pages/man2/bpf.2.html
+    #function_http_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
+    function_http_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
+
+  #create raw socket, bind it to interface
+  #attach bpf program to socket created
+    BPF.attach_raw_socket(function_http_filter[-1], interface)
+
+  #get file descriptor of the socket previously created inside BPF.attach_raw_socket
+    #socket_fd = function_http_filter.sock
+    socket_fd.append(function_http_filter[-1].sock)
+
+  #create python socket object, from the file descriptor
+    #sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
+    sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
+  #set it as blocking socket
+    sock[-1].setblocking(True)
+
+
+def notifier():
+  notifier = pyinotify.AsyncNotifier(wm, EventHandler())
+  wdd = wm.add_watch('/home/inesp', mask, rec=False)
+  import asyncore
+  asyncore.loop()
 
 
 #args
@@ -88,46 +130,11 @@ if len(argv) == 3:
 if len(argv) > 3:
   usage()
 
-config = ConfigParser.RawConfigParser()
-config.read('filters.cfg')
-print ("binding socket to '%s'" % interface)
 
-for filter in config.sections()[1:]:
-  program = config.get(filter,'program')
-  function = config.get(filter,'function')
-
-# initialize BPF - load source code from http-parse-simple.c
-  bpf.append(BPF(src_file = "filters/"+program,debug = 0))
-  #bpf = BPF(src_file = "filters/"+program,debug = 0)
-
-#load eBPF program http_filter of type SOCKET_FILTER into the kernel eBPF vm
-#more info about eBPF program types
-#http://man7.org/linux/man-pages/man2/bpf.2.html
-  #function_http_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
-  function_http_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
-
-#create raw socket, bind it to interface
-#attach bpf program to socket created
-  BPF.attach_raw_socket(function_http_filter[-1], interface)
-
-#get file descriptor of the socket previously created inside BPF.attach_raw_socket
-  #socket_fd = function_http_filter.sock
-  socket_fd.append(function_http_filter[-1].sock)
-
-#create python socket object, from the file descriptor
-  #sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
-  sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
-#set it as blocking socket
-  sock[-1].setblocking(True)
-
-"""notifier = pyinotify.AsyncNotifier(wm, EventHandler())
-wdd = wm.add_watch('/home/inesp', mask, rec=False)
-import asyncore
-asyncore.loop()"""
-notifier = pyinotify.ThreadedNotifier(wm, EventHandler())
-notifier.start()
-wdd = wm.add_watch('/home/inesp', mask, rec=False)
-wm.rm_watch(wdd.values())
+thread1 = threading.Thread(target=filter)
+thread2 = threading.Thread(target=notifier)
+thread1.start()
+thread2.start()
 
 while 1:
   #retrieve raw packet from socket
