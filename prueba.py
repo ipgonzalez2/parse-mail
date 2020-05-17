@@ -95,7 +95,7 @@ def notifier():
   asyncore.loop()
 
 
-def print():
+def printing():
   while 1:
    print(bytearray(os.read(socket_fd[-1],100000)))
 
@@ -139,7 +139,7 @@ if len(argv) > 3:
 
 thread1 = threading.Thread(target=filter)
 thread2 = threading.Thread(target=notifier)
-thread3 = threading.Thread(target=print)
+thread3 = threading.Thread(target=printing)
 thread1.start()
 thread2.start()
 thread3.start()
