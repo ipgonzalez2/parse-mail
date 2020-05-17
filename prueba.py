@@ -45,8 +45,7 @@ class EventHandler(pyinotify.ProcessEvent):
     socket_fd.append(function_http_filter[-1].sock)
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
     sock[-1].setblocking(True)
-    thread3.terminate()
-    thread3.start()
+    printing()
 
   
   def process_IN_DELETE(self, event):
@@ -97,8 +96,7 @@ def notifier():
 
 def printing():
   while 1:
-    if len(socket_fd)>0:
-      print(bytearray(os.read(socket_fd[-1],100000)))
+    print(bytearray(os.read(socket_fd[-1],100000)))
 
 
 
@@ -140,7 +138,10 @@ if len(argv) > 3:
 
 thread1 = threading.Thread(target=filter)
 thread2 = threading.Thread(target=notifier)
-thread3 = threading.Thread(target=printing)
 thread1.start()
 thread2.start()
-thread3.start()
+
+
+while 1:
+  for i in socket_fd:
+    print(bytearray(os.read(i,100000)))
