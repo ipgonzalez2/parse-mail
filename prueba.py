@@ -120,10 +120,10 @@ for filter in config.sections()[1:]:
 #set it as blocking socket
   sock[-1].setblocking(True)
 
-  notifier = pyinotify.AsyncNotifier(wm, EventHandler())
+  """notifier = pyinotify.AsyncNotifier(wm, EventHandler())
   wdd = wm.add_watch('/home/inesp', mask, rec=False)
   import asyncore
-  asyncore.loop()
+  asyncore.loop()"""
 
 
 while 1:
