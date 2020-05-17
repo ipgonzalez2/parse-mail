@@ -20,6 +20,21 @@ import sys
 import socket
 import os
 import ConfigParser
+import pyinotify
+
+wm = pyinotify.WatchManager()
+mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE
+
+class EventHandler(pyinotify.ProcessEvent):
+  def process_IN_CREATE(self, event):
+    print("Creating:", event.pathname)
+  
+  
+  def process_IN_DELETE(self, event):
+    print("Removing:", event.pathname)
+
+
+
 
 #args
 def usage():
@@ -96,6 +111,10 @@ for filter in config.sections()[1:]:
 
 
 while 1:
+  notifier = pyinotify.AsyncNotifier(wm, EventHandler())
+  wdd = wm.add_watch('/home/inesp', mask, rec=False)
+  import asyncore
+  asyncore.loop()
   #retrieve raw packet from socket
   for i in socket_fd:
     print(bytearray(os.read(i,100000)))
