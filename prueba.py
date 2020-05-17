@@ -120,11 +120,14 @@ for filter in config.sections()[1:]:
 #set it as blocking socket
   sock[-1].setblocking(True)
 
-notifier = pyinotify.AsyncNotifier(wm, EventHandler())
+"""notifier = pyinotify.AsyncNotifier(wm, EventHandler())
 wdd = wm.add_watch('/home/inesp', mask, rec=False)
 import asyncore
-asyncore.loop()
-
+asyncore.loop()"""
+notifier = pyinotify.ThreadedNotifier(wm, EventHandler())
+notifier.start()
+wdd = wm.add_watch('/home/inesp', mask, rec=False)
+wm.rm_watch(wdd.values())
 
 while 1:
   #retrieve raw packet from socket
