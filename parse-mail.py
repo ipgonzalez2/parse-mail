@@ -120,16 +120,16 @@ def filter():
   #get file descriptor of the socket previously created inside BPF.attach_raw_socket
     #socket_fd = function_http_filter.sock
     socket_fd.append(function_http_filter[-1].sock)
+    config.set(filter, 'fd', function_http_filter[-1].sock)
 
   #create python socket object, from the file descriptor
     #sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
   #set it as blocking socket
     sock[-1].setblocking(True)
-    print(sock)
-    print(sock[-1].fileno)
 
-
+  with open('filters.cfg', 'wb') as configfile:
+    config.write(configfile)
   while 1:
     for i in socket_fd:
       print(bytearray(os.read(i, 10000)))
