@@ -48,7 +48,7 @@ class EventHandler(pyinotify.ProcessEvent):
     print(socket_fd)
     while 1:
       for i in socket_fd:
-      print(bytearray(os.read(i, 100000)))
+        print(bytearray(os.read(i, 100000)))
     
 
   
