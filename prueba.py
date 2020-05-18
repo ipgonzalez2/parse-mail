@@ -37,6 +37,8 @@ class EventHandler(pyinotify.ProcessEvent):
   def process_IN_MOVED_TO(self, event):
     print("Creating:", event.pathname)
     os.system("sudo python addFilter.py " + event.pathname)
+    config = ConfigParser.RawConfigParser()
+    config.read('filters.cfg')
     program = config.get(config.sections()[-1], 'program')
     print(program)
     function = config.get(config.sections()[-1], 'function')
