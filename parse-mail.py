@@ -168,7 +168,9 @@ if len(argv) > 2:
   usage()
 
 
-filter()
+thread1 = threading.Thread(target=filter)
 thread2 = threading.Thread(target=notifier)
+thread1.start()
 thread2.start()
+thread1.join()
 thread2.join()
