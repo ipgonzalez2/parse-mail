@@ -139,7 +139,7 @@ def filter():
 
 def notifier():
   notifier = pyinotify.AsyncNotifier(wm, EventHandler())
-  wdd = wm.add_watch('spam', mask, rec=False)
+  wdd = wm.add_watch('spam/', mask, rec=False)
   import asyncore
   asyncore.loop()
 
