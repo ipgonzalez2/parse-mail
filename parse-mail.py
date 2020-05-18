@@ -76,11 +76,14 @@ def filter():
   for section in config.sections()[1:]:
     hashes.append(config.get(section, 'hash'))
 
+  print hashes
+
   basepath = 'spam/'
   for entry in os.listdir(basepath):
     if os.path.isfile(os.path.join(basepath, entry)):
       hash_summary = getHash(os.path.join(basepath, entry))
       if hash_summary not in hashes:
+        print "adding filter for" + str(entry)
         os.system("sudo python addFilter.py " + os.path.join(basepath, entry))
       else:
         hashes.remove(hash_summary)
