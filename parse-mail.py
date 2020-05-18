@@ -127,6 +127,7 @@ def filter():
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
   #set it as blocking socket
     sock[-1].setblocking(True)
+    print(socket_fd)
 
   with open('filters.cfg', 'wb') as configfile:
     config.write(configfile)
