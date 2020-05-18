@@ -25,10 +25,10 @@ import pyinotify
 
 wm = pyinotify.WatchManager()
 mask = pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
-global bpf = []
-global function_http_filter = []
-global socket_fd = []
-global sock = []
+bpf = []
+function_http_filter = []
+socket_fd = []
+sock = []
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 interface = config.get('settings', 'interface')
