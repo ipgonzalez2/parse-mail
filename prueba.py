@@ -46,6 +46,9 @@ class EventHandler(pyinotify.ProcessEvent):
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
     sock[-1].setblocking(True)
     print(socket_fd)
+    while 1:
+      for i in socket_fd:
+      print(bytearray(os.read(i, 100000)))
     
 
   
@@ -88,16 +91,12 @@ def filter():
     sock[-1].setblocking(True)
 
 
+
 def notifier():
   notifier = pyinotify.AsyncNotifier(wm, EventHandler())
   wdd = wm.add_watch('/home/inesp', mask, rec=False)
   import asyncore
   asyncore.loop()
-
-
-def printing():
-  print(socket_fd)
-  print(bytearray(os.read(socket_fd[-1],10000)))
 
 
 
