@@ -22,6 +22,7 @@ import socket
 import os
 import ConfigParser
 import pyinotify
+import hashlib
 
 wm = pyinotify.WatchManager()
 mask = pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
@@ -56,9 +57,32 @@ class EventHandler(pyinotify.ProcessEvent):
     os.system("sudo python removeFilter.py " + event.pathname)
 
 
+def getHash(file_path):
+  BLOCK_SIZE = 65536
+  file_hash = hashlib.sha256()
+  with open(file_path, 'rb') as f:
+    fb = f.read(BLOCK_SIZE)
+    while len(fb) > 0:
+        file_hash.update(fb)
+        fb = f.read(BLOCK_SIZE)
+  hash_summary = file_hash.hexdigest()
+  return hash_summary
+
+
 def filter():
   config = ConfigParser.RawConfigParser()
   config.read('filters.cfg')
+  hashes = []
+  for section in config.sections()[1:]:
+    hashes.append(config.get(section, 'hash'))
+
+  basepath = 'spam/'
+  for entry in os.listdir(basepath):
+    if os.path.isfile(os.path.join(basepath, entry)):
+      hash_summary = getHash(os.path.join(basepath, entry))
+      if hash_summary not in hashes:
+        os.system("sudo python addFilter.py " + os.path.join(basepath, entry))
+
   
   print ("binding socket to '%s'" % interface)
 
@@ -131,9 +155,7 @@ if len(argv) > 2:
   usage()
 
 
-thread1 = threading.Thread(target=filter)
+filter()
 thread2 = threading.Thread(target=notifier)
-thread1.start()
 thread2.start()
-thread1.join()
 thread2.join()
