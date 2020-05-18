@@ -49,9 +49,9 @@ class EventHandler(pyinotify.ProcessEvent):
     socket_fd.append(function_http_filter[-1].sock)
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
     sock[-1].setblocking(True)
-    print(socket_fd)
-    for i in socket_fd:
-        print(i)
+    while 1:
+      for i in socket_fd:
+        print(bytearray(os.read(i, 10000)))
     
 
   
