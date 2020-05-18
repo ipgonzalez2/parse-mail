@@ -82,9 +82,22 @@ def filter():
       hash_summary = getHash(os.path.join(basepath, entry))
       if hash_summary not in hashes:
         os.system("sudo python addFilter.py " + os.path.join(basepath, entry))
+      else:
+        hashes.remove(hash_summary)
+
+
+  for section in config.sections()[1:]:
+    if config.get(section, 'hash') in hashes:
+        if os.path.exists("./filters/" + config.get(section, 'program')):
+            os.remove("./filters/" + config.get(section, 'program'))
+        config.remove_section(section)
+  with open('filters.cfg', 'wb') as configfile:
+    config.write(configfile)
 
   
   print ("binding socket to '%s'" % interface)
+
+  config.read('filters.cfg')
 
   for filter in config.sections()[1:]:
     program = config.get(filter,'program')
