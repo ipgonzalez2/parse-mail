@@ -25,10 +25,10 @@ import pyinotify
 
 wm = pyinotify.WatchManager()
 mask = pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
-bpf = []
-function_http_filter = []
-socket_fd = []
-sock = []
+global bpf = []
+global function_http_filter = []
+global socket_fd = []
+global sock = []
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 interface = config.get('settings', 'interface')
@@ -45,7 +45,8 @@ class EventHandler(pyinotify.ProcessEvent):
     socket_fd.append(function_http_filter[-1].sock)
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
     sock[-1].setblocking(True)
-    hola()
+    print(socket_fd)
+    
 
   
   def process_IN_DELETE(self, event):
@@ -94,9 +95,9 @@ def notifier():
   asyncore.loop()
 
 
-def hola():
-  for i in socket_fd:
-    print(bytearray(os.read(i,100000)))
+def printing():
+  print(socket_fd)
+  print(bytearray(os.read(socket_fd[-1],10000)))
 
 
 
@@ -140,3 +141,5 @@ thread1 = threading.Thread(target=filter)
 thread2 = threading.Thread(target=notifier)
 thread1.start()
 thread2.start()
+thread1.join()
+thread2.join()
