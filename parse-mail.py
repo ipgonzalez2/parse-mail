@@ -32,7 +32,7 @@ sock = []
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 interface = config.get('settings', 'interface')
-basepath = 'spam/'
+basepath = '/home/inesp/contenedor/'
 
 
 # Events handler
@@ -139,7 +139,7 @@ def filter():
 # Watches directory spam/ to seek for changes
 def notifier():
   notifier = pyinotify.AsyncNotifier(wm, EventHandler())
-  wdd = wm.add_watch('./spam/', mask, rec=False)
+  wdd = wm.add_watch(basepath, mask, rec=False)
   asyncore.loop()
 
 #args
