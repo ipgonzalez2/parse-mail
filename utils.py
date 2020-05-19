@@ -118,6 +118,7 @@ def addFilter(file_path):
 def removeFilter(file_path):
     # Calculating hash of file
     hash_summary = getHash(file_path).hexdigest()
+    fd = -1
 
     # Searching for summary in the configuration file and removing filter
     config = ConfigParser.RawConfigParser()
@@ -126,11 +127,13 @@ def removeFilter(file_path):
         if config.get(section, 'hash') == hash_summary:
             if os.path.exists("./filters/" + config.get(section, 'program')):
                 os.remove("./filters/" + config.get(section, 'program'))
+            fd = config.get(section, 'fd')
             config.remove_section(section)
         
     # Writing our configuration file to 'filters.cfg'
     with open('filters.cfg', 'wb') as configfile:
         config.write(configfile)
+    return fd
 
         
 

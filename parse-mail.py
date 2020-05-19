@@ -18,7 +18,7 @@ import utils
 
 # Configures notifier
 wm = pyinotify.WatchManager()
-mask = pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
+mask = pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
 
 
 # BPF params
@@ -59,9 +59,10 @@ class EventHandler(pyinotify.ProcessEvent):
       config.write(configfile)
 
   
-  def process_IN_DELETE(self, event):
+  def process_IN_MOVED_FROM(self, event):
     print("Removing filter for:", event.pathname)
-    # utils.removeFilter(event.pathname)
+    fd = utils.removeFilter(event.pathname)
+    socket_fd.remove(fd)
 
 
 def filter():
