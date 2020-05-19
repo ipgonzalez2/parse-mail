@@ -41,19 +41,15 @@ class EventHandler(pyinotify.ProcessEvent):
   def process_IN_MOVED_TO(self, event):
     print("Creating filter for:", event.pathname)
     utils.addFilter(event.pathname)
-    """
-    config = ConfigParser.RawConfigParser()
     config.read('filters.cfg')
     program = config.get(config.sections()[-1], 'program')
-    print(program)
     function = config.get(config.sections()[-1], 'function')
-    print(function)
     bpf.append(BPF(src_file = "filters/"+program,debug = 0))
     function_http_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
     BPF.attach_raw_socket(function_http_filter[-1], interface)
     socket_fd.append(function_http_filter[-1].sock)
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
-    sock[-1].setblocking(True)"""
+    sock[-1].setblocking(True)
 
   
   def process_IN_DELETE(self, event):
