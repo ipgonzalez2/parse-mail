@@ -8,7 +8,6 @@ from jinja2 import Environment, FileSystemLoader
 from sys import argv
 from os import path
 
-
 BLOCK_SIZE = 65536
 
 def getHash(file_path):

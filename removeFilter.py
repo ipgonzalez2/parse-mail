@@ -8,41 +8,6 @@ import addFilter
 from sys import argv
 from os import path
 
-#args
-def usage():
-    print("USAGE: %s spam_file" % argv[0])
-    print("")
-    print("Try '%s -h' for more options." % argv[0])
-    exit()
-
-#help
-def help():
-    print("USAGE: %s spam_file" % argv[0])
-    print("")
-    print("optional arguments:")
-    print("   -h                       print this help")
-    print("")
-    print("examples:")
-    print("    removeFilter spam.eml             # removes filter relative to spam.eml")
-    exit()
-
-
-if len(argv) == 2:
-  if str(argv[1]) == '-h':
-    help()
-  elif path.exists(argv[1]):
-    file_path = argv[1]  
-  else:
-    usage()
-
-if len(argv) == 3:
-  if str(argv[1]) == '-h':
-    help()
-  else:
-    usage()
-
-if len(argv) > 3 or len(argv) < 2:
-  usage()
 
 # Calculating hash of file
 hash_summary = addFilter.getHash(file_path).hexdigest()
