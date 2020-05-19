@@ -129,7 +129,7 @@ def filter():
 
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
-  socket_fd.remove(10)
+
   while 1:
     for i in socket_fd:
       print(bytearray(os.read(i, 10000)))
