@@ -1,43 +1,47 @@
-#!/usr/bin/python
-#
-#Bertrone Matteo - Polytechnic of Turin
-#November 2015
-#
-#eBPF application that parses HTTP packets
-#and extracts (and prints on screen) the URL contained in the GET/POST request.
-#
-#eBPF program http_filter is used as SOCKET_FILTER attached to eth0 interface.
-#only packet of type ip and tcp containing HTTP GET/POST are returned to userspace, others dropped
-#
-#python script uses bcc BPF Compiler Collection by iovisor (https://github.com/iovisor/bcc)
-#and prints on stdout the first line of the HTTP GET/POST request containing the url
+#eBPF application that parses SMTP packets
+
 
 from __future__ import print_function
 from bcc import BPF
 from sys import argv
 
 import sys
+import asyncore
 import threading
 import socket
 import os
 import ConfigParser
 import pyinotify
 import hashlib
+import utils
 
+
+# Configures notifier
 wm = pyinotify.WatchManager()
 mask = pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
+
+
+# BPF params
 bpf = []
 function_http_filter = []
 socket_fd = []
 sock = []
+
+
+# Get configuration
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 interface = config.get('settings', 'interface')
+basepath = 'spam/'
 
+
+# Events handler
 class EventHandler(pyinotify.ProcessEvent):
+
   def process_IN_MOVED_TO(self, event):
-    print("Creating:", event.pathname)
-    os.system("sudo python addFilter.py " + event.pathname)
+    print("Creating filter for:", event.pathname)
+    utils.addFilter(event.pathname)
+    """
     config = ConfigParser.RawConfigParser()
     config.read('filters.cfg')
     program = config.get(config.sections()[-1], 'program')
@@ -49,46 +53,38 @@ class EventHandler(pyinotify.ProcessEvent):
     BPF.attach_raw_socket(function_http_filter[-1], interface)
     socket_fd.append(function_http_filter[-1].sock)
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
-    sock[-1].setblocking(True)
+    sock[-1].setblocking(True)"""
 
   
   def process_IN_DELETE(self, event):
-    print("Removing:", event.pathname)
-    os.system("sudo python removeFilter.py " + event.pathname)
-
-
-def getHash(file_path):
-  BLOCK_SIZE = 65536
-  file_hash = hashlib.sha256()
-  with open(file_path, 'rb') as f:
-    fb = f.read(BLOCK_SIZE)
-    while len(fb) > 0:
-        file_hash.update(fb)
-        fb = f.read(BLOCK_SIZE)
-  hash_summary = file_hash.hexdigest()
-  return hash_summary
+    print("Removing filter for:", event.pathname)
+    utils.removeFilter(event.pathname)
 
 
 def filter():
-  config = ConfigParser.RawConfigParser()
+  #Reading configuration
   config.read('filters.cfg')
+  
   hashes = []
   for section in config.sections()[1:]:
     hashes.append(config.get(section, 'hash'))
 
   print(hashes)
 
-  basepath = 'spam/'
+
+  # Adding filter for files in spam/ if needed
   for entry in os.listdir(basepath):
     if os.path.isfile(os.path.join(basepath, entry)):
-      hash_summary = getHash(os.path.join(basepath, entry))
+      hash_summary = utils.getHash(os.path.join(basepath, entry))
       if hash_summary not in hashes:
         print("adding filter for" + str(entry))
-        os.system("sudo python addFilter.py " + os.path.join(basepath, entry))
+        utils.addFilter(os.path.join(basepath, entry))
       else:
         hashes.remove(hash_summary)
+        print(hashes)
 
 
+  config.read('filters.cfg')
   for section in config.sections()[1:]:
     if config.get(section, 'hash') in hashes:
         if os.path.exists("./filters/" + config.get(section, 'program')):
@@ -132,18 +128,15 @@ def filter():
     sock[-1].setblocking(True)
     print(socket_fd)
 
-  with open('filters.cfg', 'wb') as configfile:
-    config.write(configfile)
   while 1:
     for i in socket_fd:
       print(bytearray(os.read(i, 10000)))
 
 
-
+# Watches directory spam/ to seek for changes
 def notifier():
   notifier = pyinotify.AsyncNotifier(wm, EventHandler())
-  wdd = wm.add_watch('spam/', mask, rec=False)
-  import asyncore
+  wdd = wm.add_watch(basepath, mask, rec=False)
   asyncore.loop()
 
 #args
@@ -174,9 +167,16 @@ if len(argv) > 2:
   usage()
 
 
+# Thread that loads filters and print them
 thread1 = threading.Thread(target=filter)
+
+# Thread that awaits for changes in directory
 thread2 = threading.Thread(target=notifier)
+
+# Start threads
 thread1.start()
 thread2.start()
+
+# Join threads
 thread1.join()
 thread2.join()
