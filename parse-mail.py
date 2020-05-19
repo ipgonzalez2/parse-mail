@@ -74,7 +74,7 @@ def filter():
 
   # Adding filter for files in spam/ if needed
   for entry in os.listdir(basepath):
-    if os.path.isfile(os.path.join(basepath, entry)) and os.path.join(basepath, entry) != '.gitkeep' :
+    if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
       hash_summary = utils.getHash(os.path.join(basepath, entry))
       if hash_summary not in hashes:
         print("adding filter for" + str(entry))
