@@ -61,7 +61,7 @@ class EventHandler(pyinotify.ProcessEvent):
   
   def process_IN_DELETE(self, event):
     print("Removing filter for:", event.pathname)
-    utils.removeFilter(event.pathname)
+    # utils.removeFilter(event.pathname)
 
 
 def filter():
@@ -125,6 +125,7 @@ def filter():
 
     #set it as blocking socket
     sock[-1].setblocking(True)
+    socket_fd.remove(10)
 
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
