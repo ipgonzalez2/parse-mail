@@ -3,6 +3,7 @@ import sys
 import re
 import ConfigParser
 import hashlib
+import addFilter
 
 from sys import argv
 from os import path
@@ -25,8 +26,6 @@ def help():
     print("    removeFilter spam.eml             # removes filter relative to spam.eml")
     exit()
 
-#arguments
-porcentaje = 4
 
 if len(argv) == 2:
   if str(argv[1]) == '-h':
@@ -46,14 +45,7 @@ if len(argv) > 3 or len(argv) < 2:
   usage()
 
 # Calculating hash of file
-BLOCK_SIZE = 65536
-file_hash = hashlib.sha256()
-with open(file_path, 'rb') as f:
-    fb = f.read(BLOCK_SIZE)
-    while len(fb) > 0:
-        file_hash.update(fb)
-        fb = f.read(BLOCK_SIZE)
-hash_summary = file_hash.hexdigest()
+hash_summary = addFilter.getHash(file_path).hexdigest()
 
 # Searching for summary in the configuration file and removing filter
 config = ConfigParser.RawConfigParser()
