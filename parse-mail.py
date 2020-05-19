@@ -69,19 +69,22 @@ def filter():
   for section in config.sections()[1:]:
     hashes.append(config.get(section, 'hash'))
 
-  print(hashes)
+  print("HASHES INICIALES: " + str(hashes))
 
 
   # Adding filter for files in spam/ if needed
   for entry in os.listdir(basepath):
     if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
       hash_summary = utils.getHash(os.path.join(basepath, entry))
+      print(hash_summary)
       if hash_summary not in hashes:
         print("adding filter for" + str(entry))
         utils.addFilter(os.path.join(basepath, entry))
       else:
+        print("removing filter for" + str(entry))
         hashes.remove(hash_summary)
-        print(hashes)
+
+  print("hashes despues " + str(hashes))
 
 
   config.read('filters.cfg')
