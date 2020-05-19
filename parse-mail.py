@@ -125,6 +125,7 @@ def filter():
 
     #set it as blocking socket
     sock[-1].setblocking(True)
+    print(socket_fd)
     socket_fd.remove(10)
 
     with open('filters.cfg', 'wb') as configfile:
