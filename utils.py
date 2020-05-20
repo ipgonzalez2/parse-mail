@@ -110,6 +110,8 @@ def addFilter(file_path, file_conf):
         # Writing our configuration file to 'filters.cfg'
         with open(file_conf, 'wb') as configfile:
             config.write(configfile)
+
+        return numCar, car
     else:
         print("File doesn't exist")
 
