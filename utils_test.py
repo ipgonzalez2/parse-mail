@@ -55,10 +55,10 @@ class TestUtils(unittest.TestCase):
 
 
     # Test that deletes file undefined
-    """def test_delete_2(self):
+    def test_delete_2(self):
         utils.removeFilter('test/file_test2', 'test/filters_test_delete.cfg')
         self.config.read('test/filters_test_delete.cfg')
-        self.assertTrue(len(self.config.sections()) == 2)"""
+        self.assertTrue(len(self.config.sections()) == 2)
 
 
 
