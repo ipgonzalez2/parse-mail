@@ -1,18 +1,22 @@
 import unittest
 import utils
+import ConfigParser
 
 
 class TestUtils(unittest.TestCase):
     def setUp(self):
         print("Preparando el contexto")
-        self.spam = open("file_test", "r")
+        self.config = ConfigParser.RawConfigParser()
 
 
     # Test for spams with array of size < 30
     def test_add_1(self):
         numCaracteres, caracteres = utils.addFilter('file_test_1', 'filters_test_add.cfg')
         self.assertEqual(numCaracteres, 14)
-        self.assertEqual(caracteres, [])
+        self.assertEqual(caracteres, ['-','_','t','e','r','\n','g','I','C','W','2','J','u','B'])
+        self.config.read('filters_test_add.cfg')
+        self.assertTrue(len(self.config.sections()) == 2)
+
 
 
     def tearDown(self):
