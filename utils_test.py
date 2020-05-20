@@ -7,6 +7,11 @@ class TestUtils(unittest.TestCase):
     def setUp(self):
         print("Preparando el contexto")
         self.config = ConfigParser.RawConfigParser()
+        self.config.read('test/filters_test_add.cfg')
+        for section in self.config.sections()[1:]:
+            self.config.remove_section(section)
+        with open('test/filters_test_add.cfg', 'wb') as configfile:
+        self.config.write(configfile)
 
 
     # Test for spams with array of size < 30
