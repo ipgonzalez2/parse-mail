@@ -18,6 +18,15 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(len(self.config.sections()) == 2)
 
 
+    # Test for spams with size > 15000
+    def test_add_2(self):
+        numCaracteres, caracteres = utils.addFilter('test/file_test2', 'test/filters_test_add.cfg')
+        self.assertEqual(numCaracteres, 30)
+        self.assertEqual(caracteres, [' ','n','\xfa',' ',' ',' ',' ','b','/','V','x','9','H','v','j','f','w','E','3','a','p','2','M','t','p','g','O','d','7','y'])
+        self.config.read('test/filters_test_add.cfg')
+        self.assertTrue(len(self.config.sections()) == 3)
+
+
 
     def tearDown(self):
         print("Destruyendo el contexto")
