@@ -129,7 +129,8 @@ def removeFilter(file_path, file_conf):
         if config.get(section, 'hash') == hash_summary:
             if os.path.exists("./filters/" + config.get(section, 'program')):
                 os.remove("./filters/" + config.get(section, 'program'))
-            fd = config.get(section, 'fd')
+            if(section.has_option('fd')):
+                fd = config.get(section, 'fd')
             config.remove_section(section)
         
     # Writing our configuration file to 'filters.cfg'
