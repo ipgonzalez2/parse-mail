@@ -10,6 +10,7 @@ class TestUtils(unittest.TestCase):
     def setUp(self):
         print("Preparando el contexto")
         self.config = ConfigParser.RawConfigParser()
+        self.config2 = ConfigParser.RawConfigParser()
 
         self.config.read('test/filters_test_add.cfg')
         for section in self.config.sections()[1:]:
@@ -17,15 +18,15 @@ class TestUtils(unittest.TestCase):
         with open('test/filters_test_add.cfg', 'wb') as configfile:
             self.config.write(configfile)
 
-        self.config.read('test/filters_test_delete.cfg')
-        for section in self.config.sections()[1:]:
-            self.config.remove_section(section)
-        self.config.add_section('Filter0')
-        self.config.set('Filter0', 'program', 'filter0.c')
-        self.config.set('Filter0', 'function', 'mail_filter_0')
-        self.config.set('Filter0', 'hash', '510676b179b68c5ffd5c9106f31f3ef584139b243ad8b00b4de25bd9ad84e105')
+        self.config2.read('test/filters_test_delete.cfg')
+        for section in self.config2.sections()[1:]:
+            self.config2.remove_section(section)
+        self.config2.add_section('Filter0')
+        self.config2.set('Filter0', 'program', 'filter0.c')
+        self.config2.set('Filter0', 'function', 'mail_filter_0')
+        self.config2.set('Filter0', 'hash', '510676b179b68c5ffd5c9106f31f3ef584139b243ad8b00b4de25bd9ad84e105')
         with open('test/filters_test_delete.cfg', 'wb') as configfile:
-            self.config.write(configfile)
+            self.config2.write(configfile)
 
 
 
