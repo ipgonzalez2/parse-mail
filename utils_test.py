@@ -51,6 +51,8 @@ class TestUtils(unittest.TestCase):
     def test_delete_1(self):
         utils.removeFilter('test/file_test1', 'test/filters_test_delete.cfg')
         self.config.read('test/filters_test_delete.cfg')
+        for section in self.config.sections()[1:]:
+            print(section)
         self.assertTrue(len(self.config.sections()) == 1)
 
 
