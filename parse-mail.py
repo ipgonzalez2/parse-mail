@@ -40,7 +40,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
   def process_IN_MOVED_TO(self, event):
     print("Creating filter for:", event.pathname)
-    utils.addFilter(event.pathname)
+    utils.addFilter(event.pathname, 'filters.cfg')
 
     config.read('filters.cfg')
     program = config.get(config.sections()[-1], 'program')
@@ -61,7 +61,7 @@ class EventHandler(pyinotify.ProcessEvent):
   
   def process_IN_MOVED_FROM(self, event):
     print("Removing filter for:", event.pathname)
-    fd = utils.removeFilter(event.pathname)
+    fd = utils.removeFilter(event.pathname, 'filters.cfg')
     socket_fd.remove(fd)
 
 
@@ -80,7 +80,7 @@ def filter():
       hash_summary = utils.getHash(os.path.join(basepath, entry)).hexdigest()
       if hash_summary not in hashes:
         print("adding filter for" + str(entry))
-        utils.addFilter(os.path.join(basepath, entry))
+        utils.addFilter(os.path.join(basepath, entry), 'filters.cfg')
       else:
         hashes.remove(hash_summary)
 

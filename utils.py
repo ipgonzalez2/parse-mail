@@ -24,11 +24,11 @@ def getHash(file_path):
 
 
 # Adds filter for a spam file given
-def addFilter(file_path):
+def addFilter(file_path, file_conf):
     if path.exists(file_path):
         # Read configuration
         config = ConfigParser.RawConfigParser()
-        config.read('filters.cfg')
+        config.read(file_conf)
         porcentaje = config.get('settings','percentage')
 
         # Open given spam to be filtered 
@@ -79,7 +79,7 @@ def addFilter(file_path):
 
         # Searching filter id
         config = ConfigParser.RawConfigParser()
-        config.read("filters.cfg")
+        config.read(file_conf)
         if(len(config.sections()) > 1):
             numFilter = str(int(config.sections()[-1][6:]) + 1)
         else:
@@ -108,21 +108,21 @@ def addFilter(file_path):
         config.set('Filter'+numFilter, 'hash', file_hash.hexdigest())
 
         # Writing our configuration file to 'filters.cfg'
-        with open('filters.cfg', 'wb') as configfile:
+        with open(file_conf, 'wb') as configfile:
             config.write(configfile)
     else:
         print("File doesn't exist")
 
 
 # Removes filter for spam file given
-def removeFilter(file_path):
+def removeFilter(file_path, file_conf):
     # Calculating hash of file
     hash_summary = getHash(file_path).hexdigest()
     fd = -1
 
     # Searching for summary in the configuration file and removing filter
     config = ConfigParser.RawConfigParser()
-    config.read("filters.cfg")
+    config.read(file_conf)
     for section in config.sections()[1:]:
         if config.get(section, 'hash') == hash_summary:
             if os.path.exists("./filters/" + config.get(section, 'program')):
@@ -131,7 +131,7 @@ def removeFilter(file_path):
             config.remove_section(section)
         
     # Writing our configuration file to 'filters.cfg'
-    with open('filters.cfg', 'wb') as configfile:
+    with open(file_conf, 'wb') as configfile:
         config.write(configfile)
     return fd
 
