@@ -61,6 +61,7 @@ class EventHandler(pyinotify.ProcessEvent):
   
   def process_IN_DELETE(self, event):
     print("Removing filter for:", event.pathname)
+    print(socket_fd)
   
     hashes = []
     for entry in os.listdir(basepath):
@@ -75,6 +76,7 @@ class EventHandler(pyinotify.ProcessEvent):
             os.remove("./filters/" + config.get(section, 'program'))
         if(config.has_option(section,'fd')):
             fd = config.get(section, 'fd')
+            print(fd)
             socket_fd.remove(fd)
         config.remove_section(section)
 
