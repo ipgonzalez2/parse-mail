@@ -18,7 +18,7 @@ import utils
 
 # Configures notifier
 wm = pyinotify.WatchManager()
-mask = pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
+mask = pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
 
 
 # BPF params
