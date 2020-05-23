@@ -59,11 +59,27 @@ class EventHandler(pyinotify.ProcessEvent):
       config.write(configfile)
 
   
-  def process_IN_MOVED_FROM(self, event):
+  def process_IN_DELETE(self, event):
     print("Removing filter for:", event.pathname)
-    fd = utils.removeFilter(event.pathname, 'filters.cfg')
-    socket_fd.remove(fd)
+  
+    hashes = []
+    for entry in os.listdir(basepath):
+      if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
+        hash_summary = utils.getHash(os.path.join(basepath, entry)).hexdigest()
+        hashes.append(hash_summary)
 
+    config.read('filters.cfg')
+    for section in config.sections()[1:]:
+      if config.get(section, 'hash') not in hashes:
+        if os.path.exists("./filters/" + config.get(section, 'program')):
+            os.remove("./filters/" + config.get(section, 'program'))
+        if(config.has_option(section,'fd')):
+            fd = config.get(section, 'fd')
+            socket_fd.remove(fd)
+        config.remove_section(section)
+
+    with open('filters.cfg', 'wb') as configfile:
+      config.write(configfile)
 
 def filter():
   #Reading configuration

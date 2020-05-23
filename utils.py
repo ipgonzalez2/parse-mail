@@ -127,7 +127,6 @@ def removeFilter(file_path, file_conf):
     config.read(file_conf)
     for section in config.sections()[1:]:
         if config.get(section, 'hash') == hash_summary:
-            print("COINCIDEN")
             if os.path.exists("./filters/" + config.get(section, 'program')):
                 os.remove("./filters/" + config.get(section, 'program'))
             if(config.has_option(section,'fd')):
