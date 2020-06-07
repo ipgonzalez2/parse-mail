@@ -1,6 +1,5 @@
 #eBPF application that parses SMTP packets
 
-
 from __future__ import print_function
 from bcc import BPF
 from sys import argv
@@ -32,6 +31,7 @@ sock = []
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 interface = config.get('settings', 'interface')
+# CHANGE!!!!!!!!!!!!
 basepath = '/home/inesp/contenedor/'
 
 
@@ -39,54 +39,57 @@ basepath = '/home/inesp/contenedor/'
 class EventHandler(pyinotify.ProcessEvent):
 
   def process_IN_MOVED_TO(self, event):
-    print("Creating filter for:", event.pathname)
-    utils.addFilter(event.pathname, 'filters.cfg')
+    print("Creating filter for ", event.pathname + "\n")
 
+    #Adds filter for file
+    utils.addFilter(event.pathname, 'filters.cfg')
+    
+    #Creates socket for filter
     config.read('filters.cfg')
     program = config.get(config.sections()[-1], 'program')
-    print(program)
     function = config.get(config.sections()[-1], 'function')
-    print(function)
+
+    # initialize BPF - load source code from filters/program.c
     bpf.append(BPF(src_file = "filters/"+program,debug = 0))
+
+    #load eBPF program function of type SOCKET_FILTER into the kernel eBPF vm
+    #function_http_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
     function_http_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
+
+    #create raw socket, bind it to interface
+    #attach bpf program to socket created
     BPF.attach_raw_socket(function_http_filter[-1], interface)
+
+    #get file descriptor of the socket previously created inside BPF.attach_raw_socket
     socket_fd.append(function_http_filter[-1].sock)
     config.set(config.sections()[-1], 'fd', function_http_filter[-1].sock)
+
+    #create python socket object, from the file descriptor
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
+
+    #set it as blocking socket
     sock[-1].setblocking(True)
-    print(socket_fd)
+
+    #writes configuration
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
 
   
   def process_IN_DELETE(self, event):
-    print("Removing filter for:", event.pathname)
-  
-    hashes = []
-    for entry in os.listdir(basepath):
-      if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
-        hash_summary = utils.getHash(os.path.join(basepath, entry)).hexdigest()
-        hashes.append(hash_summary)
+    print("Removing filter for ", event.pathname + "\n")
 
-    config.read('filters.cfg')
-    for section in config.sections()[1:]:
-      if config.get(section, 'hash') not in hashes:
-        if os.path.exists("./filters/" + config.get(section, 'program')):
-            os.remove("./filters/" + config.get(section, 'program'))
-        if(config.has_option(section,'fd')):
-            fd = config.get(section, 'fd')
-            socket_fd.remove(int(fd))
-        config.remove_section(section)
-
-    with open('filters.cfg', 'wb') as configfile:
-      config.write(configfile)
+    #get socket descriptor and remove it
+    fd = utils.removeFilter( 'filters.cfg')
+    socket_fd.remove(int(fd))
 
 def filter():
   #Reading configuration
   config.read('filters.cfg')
-  
+
+  #Updates configuration
   hashes = []
   for section in config.sections()[1:]:
+    config.remove_option(section, 'fd')
     hashes.append(config.get(section, 'hash'))
 
 
@@ -95,7 +98,7 @@ def filter():
     if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
       hash_summary = utils.getHash(os.path.join(basepath, entry)).hexdigest()
       if hash_summary not in hashes:
-        print("adding filter for" + str(entry))
+        print("Adding filter for " + str(entry) + "\n")
         utils.addFilter(os.path.join(basepath, entry), 'filters.cfg')
       else:
         hashes.remove(hash_summary)
@@ -106,20 +109,23 @@ def filter():
   for section in config.sections()[1:]:
     if config.get(section, 'hash') in hashes:
         if os.path.exists("./filters/" + config.get(section, 'program')):
+            print("Removing filter " + config.get(section, 'program') + "\n")
             os.remove("./filters/" + config.get(section, 'program'))
         config.remove_section(section)
   with open('filters.cfg', 'wb') as configfile:
     config.write(configfile)
 
   
-  print ("binding socket to '%s'" % interface)
+  print("Binding socket to '%s'" % interface + "\n")
+  print("Starting filtering...\n")
 
   config.read('filters.cfg')
 
 
-  # Creating sockets
+  # Adds every filter in config
   for filter in config.sections()[1:]:
     program = config.get(filter,'program')
+    print("Load filter " + program + "\n")
     function = config.get(filter,'function')
 
     # initialize BPF - load source code from filters/program.c
@@ -152,7 +158,7 @@ def filter():
       print(bytearray(os.read(i, 10000)))
 
 
-# Watches directory spam/ to seek for changes
+#Watches directory spam/ to seek for changes
 def notifier():
   notifier = pyinotify.AsyncNotifier(wm, EventHandler())
   wdd = wm.add_watch(basepath, mask, rec=False)

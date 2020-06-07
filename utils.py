@@ -1,3 +1,5 @@
+#Utils
+
 import os
 import sys
 import re
@@ -10,6 +12,8 @@ from os import path
 
 
 BLOCK_SIZE = 65536
+basepath = '/home/inesp/contenedor/'
+config = ConfigParser.RawConfigParser()
 
 
 # Function that calculates hash summary of file
@@ -117,25 +121,30 @@ def addFilter(file_path, file_conf):
 
 
 # Removes filter for spam file given
-def removeFilter(file_path, file_conf):
-    # Calculating hash of file
-    hash_summary = getHash(file_path).hexdigest()
-    fd = -1
+def removeFilter(file_conf):
 
-    # Searching for summary in the configuration file and removing filter
-    config = ConfigParser.RawConfigParser()
+    #get filters in directory
+    hashes = []
+    for entry in os.listdir(basepath):
+      if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
+        hash_summary = getHash(os.path.join(basepath, entry)).hexdigest()
+        hashes.append(hash_summary)
+
     config.read(file_conf)
+
+    #Removing filter missed in directory
     for section in config.sections()[1:]:
-        if config.get(section, 'hash') == hash_summary:
-            if os.path.exists("./filters/" + config.get(section, 'program')):
-                os.remove("./filters/" + config.get(section, 'program'))
-            if(config.has_option(section,'fd')):
-                fd = config.get(section, 'fd')
-            config.remove_section(section)
-        
-    # Writing our configuration file to 'filters.cfg'
+      if config.get(section, 'hash') not in hashes:
+        if os.path.exists("./filters/" + config.get(section, 'program')):
+            os.remove("./filters/" + config.get(section, 'program'))
+        if(config.has_option(section,'fd')):
+            fd = config.get(section, 'fd')
+        config.remove_section(section)
+
     with open(file_conf, 'wb') as configfile:
-        config.write(configfile)
+      config.write(configfile)
+
+    #returns socket descriptor
     return fd
 
         
