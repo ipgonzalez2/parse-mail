@@ -79,12 +79,11 @@ class EventHandler(pyinotify.ProcessEvent):
   
   def process_IN_DELETE(self, event):
     print("-> (-) Removing filter for ", event.pathname + "...\n")
-    config.read('filters.cfg')
-    print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
-
 
     #get socket descriptor and remove it
     fd = utils.removeFilter('filters.cfg')
+    config.read('filters.cfg')
+    print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
     if fd != -1:
       index = socket_fd.index(int(fd))
       os.close(int(fd))
