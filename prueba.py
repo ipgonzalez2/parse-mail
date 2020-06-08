@@ -79,7 +79,7 @@ def filter():
     #set it as blocking socket
   sock.setblocking(True)
 
-  function_http_filter.sock.close()
+  function_http_filter.socket.close()
 
 
   with open('filters.cfg', 'wb') as configfile:
