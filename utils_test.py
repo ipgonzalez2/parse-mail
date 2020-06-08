@@ -8,7 +8,7 @@ class TestUtils(unittest.TestCase):
 
     # Initial configuration
     def setUp(self):
-        print("Preparando el contexto")
+        print("Setting up context...")
         self.config = ConfigParser.RawConfigParser()
         self.config2 = ConfigParser.RawConfigParser()
 
@@ -66,7 +66,7 @@ class TestUtils(unittest.TestCase):
 
 
     def tearDown(self):
-        print("Destruyendo el contexto")
+        print("Destroying context...")
 
 
 if __name__ == '__main__':

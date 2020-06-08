@@ -35,87 +35,90 @@ def addFilter(file_path, file_conf):
         config.read(file_conf)
         porcentaje = config.get('settings','percentage')
 
-        # Open given spam to be filtered 
-        fileSpam = open(file_path, 'r')
+        try:
+            # Open given spam to be filtered 
+            fileSpam = open(file_path, 'r')
 
-        # Creates regular expression to find where the message begins
-        regex = re.compile('\n\n')
-        match = re.search(regex, fileSpam.read())
+            # Creates regular expression to find where the message begins
+            regex = re.compile('\n\n')
+            match = re.search(regex, fileSpam.read())
 
-        # Calculating where the message begins and his size
-        inicioMensaje = match.end()
-        tamanhoTotal = os.stat(file_path).st_size
-        tamanhoMensaje = tamanhoTotal - inicioMensaje
-        limit = False
+            # Calculating where the message begins and his size
+            inicioMensaje = match.end()
+            tamanhoTotal = os.stat(file_path).st_size
+            tamanhoMensaje = tamanhoTotal - inicioMensaje
+            limit = False
 
-        if tamanhoTotal > 15000:
-            numCar = int(float(15000*float((float(porcentaje)/100))))
-            limit = True
-        else:
-            # Num of characters to match (max 30)
-            numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
-
-        if numCar > 30:
-            numCar = 30
-
-        # Creating array of characters for the filter
-        car = []
-
-        if limit:
-            x = int(float((15000 - inicioMensaje)/numCar))
-        else:
-            x = int(float(tamanhoMensaje/numCar))
-
-        fileSpam = open(file_path, 'r')
-
-
-        # Getting characters to compare
-        for i in range(numCar):
-            desp = inicioMensaje + (x * i)
-            caracter = fileSpam.read()[desp]
-            if caracter == "'":
-                car.append(str('comilla'))
+            if tamanhoTotal > 15000:
+                numCar = int(float(15000*float((float(porcentaje)/100))))
+                limit = True
             else:
-                car.append(caracter)
-            fileSpam.seek(0,0)
+                # Num of characters to match (max 30)
+                numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
 
-        fileSpam.close()
+            if numCar > 30:
+                numCar = 30
 
-        # Searching filter id
-        config = ConfigParser.RawConfigParser()
-        config.read(file_conf)
-        if(len(config.sections()) > 1):
-            numFilter = str(int(config.sections()[-1][6:]) + 1)
-        else:
-            numFilter = str(0)
+            # Creating array of characters for the filter
+            car = []
 
-        # Updating array to C
-        caracteres = str(car)
-        caracteres = caracteres[:0] + '{' + caracteres[0+1:]
-        caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
+            if limit:
+                x = int(float((15000 - inicioMensaje)/numCar))
+            else:
+                x = int(float(tamanhoMensaje/numCar))
 
-        # Adding filter to directory
-        file_loader = FileSystemLoader('filters')
-        env = Environment(loader=file_loader)
-        template = env.get_template('filter_template.c')
-        output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("comilla", "\\'"), x = x)
-        with open("./filters/filter"+numFilter+".c", "w") as fh:
-            fh.write(output)
+            fileSpam = open(file_path, 'r')
 
-        # Calculating hash of file
-        file_hash = getHash(file_path)
 
-        # Adding section to configuration file
-        config.add_section('Filter'+numFilter)
-        config.set('Filter'+numFilter, 'program', 'filter'+numFilter+'.c')
-        config.set('Filter'+numFilter, 'function', 'mail_filter_'+numFilter)
-        config.set('Filter'+numFilter, 'hash', file_hash.hexdigest())
+            # Getting characters to compare
+            for i in range(numCar):
+                desp = inicioMensaje + (x * i)
+                caracter = fileSpam.read()[desp]
+                if caracter == "'":
+                    car.append(str('comilla'))
+                else:
+                    car.append(caracter)
+                fileSpam.seek(0,0)
 
-        # Writing our configuration file to 'filters.cfg'
-        with open(file_conf, 'wb') as configfile:
-            config.write(configfile)
+            fileSpam.close()
 
-        return numCar, car
+            # Searching filter id
+            config = ConfigParser.RawConfigParser()
+            config.read(file_conf)
+            if(len(config.sections()) > 1):
+                numFilter = str(int(config.sections()[-1][6:]) + 1)
+            else:
+                numFilter = str(0)
+
+            # Updating array to C
+            caracteres = str(car)
+            caracteres = caracteres[:0] + '{' + caracteres[0+1:]
+            caracteres = caracteres[:(len(caracteres)-1)] + '}' + caracteres[(len(caracteres)-1)+1:]
+
+            # Adding filter to directory
+            file_loader = FileSystemLoader('filters')
+            env = Environment(loader=file_loader)
+            template = env.get_template('filter_template.c')
+            output = template.render(id = numFilter, tam = tamanhoMensaje, numCar = numCar, caracteres = caracteres.replace("comilla", "\\'"), x = x)
+            with open("./filters/filter"+numFilter+".c", "w") as fh:
+                fh.write(output)
+
+            # Calculating hash of file
+            file_hash = getHash(file_path)
+
+            # Adding section to configuration file
+            config.add_section('Filter'+numFilter)
+            config.set('Filter'+numFilter, 'program', 'filter'+numFilter+'.c')
+            config.set('Filter'+numFilter, 'function', 'mail_filter_'+numFilter)
+            config.set('Filter'+numFilter, 'hash', file_hash.hexdigest())
+
+            # Writing our configuration file to 'filters.cfg'
+            with open(file_conf, 'wb') as configfile:
+                config.write(configfile)
+
+            return numCar, car
+        except:
+            print("Error adding filter (the file may not be a mail) ...")
     else:
         print("File doesn't exist")
 

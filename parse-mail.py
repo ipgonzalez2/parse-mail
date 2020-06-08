@@ -209,6 +209,7 @@ def help():
 
 
 def main():
+  
   if len(argv) == 2:
     if str(argv[1]) == '-h':
       help()
