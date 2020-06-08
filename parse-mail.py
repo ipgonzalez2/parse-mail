@@ -93,8 +93,7 @@ class EventHandler(pyinotify.ProcessEvent):
       del sock[index]
       del socket_fd[index]
 
-    config.read('filters.cfg')
-    print("Currently filtering: " + str(len(config.sections()) - 1) + " mails\n\n")
+    print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
 
 def filter():
 
