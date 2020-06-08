@@ -131,7 +131,6 @@ def removeFilter(file_conf):
     hashes = []
     for entry in os.listdir(basepath):
       if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
-
         hash_summary = getHash(os.path.join(basepath, entry)).hexdigest()
         hashes.append(hash_summary)
 

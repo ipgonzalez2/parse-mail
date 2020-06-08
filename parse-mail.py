@@ -82,10 +82,8 @@ class EventHandler(pyinotify.ProcessEvent):
 
     #get socket descriptor and remove it
     fd = utils.removeFilter('filters.cfg')
-    print(fd)
     if fd != -1:
       index = socket_fd.index(int(fd))
-      print(index)
       os.close(int(fd))
       sock[index].close()
       del bpf[index]
