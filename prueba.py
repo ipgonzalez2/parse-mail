@@ -83,6 +83,7 @@ def filter():
   f.close()
   BPF.DetachSocketFilter(socket_fd)
   print(sock)
+  BPF.close(socket_fd)
   sock.close()
 
 
