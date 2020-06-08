@@ -34,6 +34,8 @@ def addFilter(file_path, file_conf):
         config = ConfigParser.RawConfigParser()
         config.read(file_conf)
         porcentaje = config.get('settings','percentage')
+        numCar = -1 
+        car = []
 
         try:
             # Open given spam to be filtered 
@@ -58,9 +60,6 @@ def addFilter(file_path, file_conf):
 
             if numCar > 30:
                 numCar = 30
-
-            # Creating array of characters for the filter
-            car = []
 
             if limit:
                 x = int(float((15000 - inicioMensaje)/numCar))
