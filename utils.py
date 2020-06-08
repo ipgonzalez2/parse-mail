@@ -131,14 +131,18 @@ def removeFilter(file_conf):
     hashes = []
     for entry in os.listdir(basepath):
       if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
+        print(os.path.join(basepath, entry))
+
         hash_summary = getHash(os.path.join(basepath, entry)).hexdigest()
         hashes.append(hash_summary)
+        print(hash_summary)
 
     config.read(file_conf)
 
     #Removing filter missed in directory
     for section in config.sections()[1:]:
       if config.get(section, 'hash') not in hashes:
+        print(config.get(section,'hash'))
         print(config.get(section,'fd'))
         if os.path.exists("./filters/" + config.get(section, 'program')):
             os.remove("./filters/" + config.get(section, 'program'))
