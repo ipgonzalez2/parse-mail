@@ -30,7 +30,7 @@ class TestUtils(unittest.TestCase):
         self.config2.add_section('Filter1')
         self.config2.set('Filter1', 'program', 'filter1.c')
         self.config2.set('Filter1', 'function', 'mail_filter_1')
-        self.config2.set('Filter1', 'hash', '8d686f8c8af9c7e005ce4ec77ed072a2dcdac722ee3c42a0ca0ecc3866ca64af')
+        self.config2.set('Filter1', 'hash', '6eb9394fc9e978bdfd940d2aa87e65d6d6ab025f819d1fbb972bac5802e0ad5a')
         with open('test/filters_test_delete.cfg', 'wb') as configfile:
             self.config2.write(configfile)
 
