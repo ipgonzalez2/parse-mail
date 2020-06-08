@@ -85,6 +85,8 @@ def filter():
   
 
   print("Starting filtering...\n")
+  while 1:
+      print(os.read(socket_fd, 10000))
 
 
 #args
