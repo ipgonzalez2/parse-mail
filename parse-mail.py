@@ -79,8 +79,12 @@ class EventHandler(pyinotify.ProcessEvent):
     print("Removing filter for ", event.pathname + "\n")
 
     #get socket descriptor and remove it
-    fd = utils.removeFilter( 'filters.cfg')
-    socket_fd.remove(int(fd))
+    fd = utils.removeFilter('filters.cfg')
+    index = socket_fd.index(int(fd))
+    del bpf[index]
+    del function_http_filter[index]
+    del sock[index]
+    # socket_fd.remove(int(fd))
 
 def filter():
   #Reading configuration
@@ -155,7 +159,10 @@ def filter():
 
   while 1:
     for i in socket_fd:
-      print(str(os.read(i, 10000)))
+      f = open("demofile2.txt", "a")
+      f.write(str(os.read(i, 10000)))
+      f.close()
+      # print(str(os.read(i, 10000)))
 
 
 #Watches directory spam/ to seek for changes
