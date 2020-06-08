@@ -78,7 +78,10 @@ def filter():
 
     #set it as blocking socket
   sock.setblocking(True)
-  bpf.SO_DETACH_FILTER
+  print(bpf)
+  print(function_http_filter)
+  print(function_http_filter.socket)
+  print(sock)
 
 
   with open('filters.cfg', 'wb') as configfile:
