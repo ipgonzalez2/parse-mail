@@ -139,6 +139,7 @@ def filter():
   print("\n**************************************************\n\n")
   print("Currently filtering " + str(len(config.sections()[1:])) + " mails\n\n")
   print("Binding socket to interface " + interface + "\n\n")
+  print("Monitoring " + basepath + "\n\n")
   print("Press CTRL-Z to exit\n\n")
   print("**************************************************\n\n")
 
