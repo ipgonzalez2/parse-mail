@@ -159,7 +159,10 @@ def filter():
 
   while 1:
     for i in socket_fd:
-      print(str(os.read(i, 10000)))
+      f = open("demofile2.txt", "a")
+      f.write(str(os.read(i, 10000)))
+      f.close()
+      # print(str(os.read(i, 10000)))
 
 
 #Watches directory spam/ to seek for changes
