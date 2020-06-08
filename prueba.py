@@ -90,7 +90,7 @@ def filter():
   print("Starting filtering...\n")
 
   while 1:
-   # print(str(os.read(socket_fd, 10000)))
+    print("...")
 
 
 #args
