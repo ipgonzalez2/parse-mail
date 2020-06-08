@@ -32,7 +32,7 @@ config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 interface = config.get('settings', 'interface')
 # CHANGE!!!!!!!!!!!!
-basepath = '/home/inesp/contenedor/'
+basepath = './spam'
 
 
 # Events handler
