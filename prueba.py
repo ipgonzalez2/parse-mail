@@ -74,7 +74,7 @@ def filter():
   config.set(filter, 'fd', function_http_filter.sock)
 
     #create python socket object, from the file descriptor
-  sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
+  sock = socket.fromfd(socket_fd,socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP)
 
     #set it as blocking socket
   sock.setblocking(True)
