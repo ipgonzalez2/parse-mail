@@ -32,6 +32,7 @@ class TestUtils(unittest.TestCase):
 
     # Test for spams with character's array of len < 30 and total size < 15000
     def test_add_1(self):
+        print("Testing mail with character's array of len < 30 and total size < 15000")
         numCaracteres1, caracteres1 = utils.addFilter('test/file_test1', 'test/filters_test_add.cfg')
         self.assertEqual(numCaracteres1, 14)
         self.assertEqual(caracteres1, ['-','_','t','e','r','\n','g','I','C','W','2','J','u','B'])
@@ -41,6 +42,7 @@ class TestUtils(unittest.TestCase):
 
     # Test for spams with total size > 15000 and character's array of len > 30
     def test_add_2(self):
+        print("Testing mail with character's array of len > 30 and total size > 15000")
         numCaracteres, caracteres = utils.addFilter('test/file_test2', 'test/filters_test_add.cfg')
         self.assertEqual(numCaracteres, 30)
         self.assertEqual(caracteres, [' ','n','\xfa',' ',' ',' ',' ','b','/','V','x','9','H','v','j','f','w','E','3','a','p','2','M','t','p','g','O','d','7','y'])
@@ -50,6 +52,7 @@ class TestUtils(unittest.TestCase):
 
     # Test for invalid input (anything but a mail)
     def test_add_3(self):
+        print("Testing mail with wrong format")
         numCaracteres, caracteres = utils.addFilter('test/file_test3', 'test/filters_test_add.cfg')
         self.assertEqual(numCaracteres, -1)
         self.assertEqual(caracteres, [])
