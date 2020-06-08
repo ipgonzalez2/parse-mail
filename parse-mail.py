@@ -158,10 +158,13 @@ def filter():
       config.write(configfile)
 
   while 1:
-    for i in socket_fd:
-      f = open("demofile2.txt", "a")
-      f.write(str(os.read(i, 10000)))
-      f.close()
+    f = open("demofile2.txt", "a")
+    f.write(str(os.read(socket_fd[0], 100000)))
+    f.write(str(os.read(socket_fd[1], 100000)))
+    f.write(str(os.read(socket_fd[2], 100000)))
+    f.write(str(os.read(socket_fd[3], 100000)))
+    f.write(str(os.read(socket_fd[4], 100000)))
+    f.close()
       # print(str(os.read(i, 10000)))
 
 
