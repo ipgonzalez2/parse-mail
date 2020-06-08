@@ -81,16 +81,13 @@ def filter():
   bpf.disassemble_func(function)
   bpf.cleanup()
   os.close(socket_fd)
-  print(function_http_filter.bpf)
-  print(dir(function_http_filter.sock))
-
-
   sock.close()
 
-  print("Starting filtering...\n")
+  print(dir(bpf))
+  print(dir(function_http_filter))
+  
 
-  while 1:
-    print("...")
+  print("Starting filtering...\n")
 
 
 #args
