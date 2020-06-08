@@ -78,8 +78,9 @@ def filter():
 
     #set it as blocking socket
   sock.setblocking(True)
+  os.close(socket_fd)
   print(function_http_filter.bpf)
-  print(function_http_filter.sock)
+  print(dir(function_http_filter.sock))
 
 
   sock.close()
