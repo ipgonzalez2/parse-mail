@@ -41,10 +41,10 @@ class EventHandler(pyinotify.ProcessEvent):
   def process_IN_MOVED_TO(self, event):
     print("-> (+) Creating filter for ", event.pathname + "...\n")
     config.read('filters.cfg')
-    print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
 
     #Adds filter for file
     utils.addFilter(event.pathname, 'filters.cfg')
+    print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
     
     #Creates socket for filter
     config.read('filters.cfg')
@@ -209,7 +209,7 @@ def help():
 
 
 def main():
-  
+
   if len(argv) == 2:
     if str(argv[1]) == '-h':
       help()
