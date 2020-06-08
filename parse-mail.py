@@ -41,7 +41,7 @@ class EventHandler(pyinotify.ProcessEvent):
   def process_IN_MOVED_TO(self, event):
     print("-> (+) Creating filter for ", event.pathname + "...\n")
     config.read('filters.cfg')
-    print("Currently filtering: " + len(config.sections()[1:]) + " mails\n\n")
+    print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
 
     #Adds filter for file
     utils.addFilter(event.pathname, 'filters.cfg')
@@ -80,7 +80,7 @@ class EventHandler(pyinotify.ProcessEvent):
   def process_IN_DELETE(self, event):
     print("-> (-) Removing filter for ", event.pathname + "...\n")
     config.read('filters.cfg')
-    print("Currently filtering: " + len(config.sections()[1:]) + " mails\n\n")
+    print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
 
 
     #get socket descriptor and remove it
@@ -100,9 +100,9 @@ def filter():
   if os.path.exists("results.txt"):
     os.remove("results.txt")
 
-  print("PARSE-MAIL\n\n")
+  print("\n\nSTARTING PARSE-MAIL...\n\n")
   print("**************************************************\n\n")
-  print("Currently filtering: " + len(config.sections()[1:]) + " mails\n\n")
+  print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
   print("Linked interface: " + interface + "\n\n")
   print("Press CTRL-Z to exit\n\n")
   print("**************************************************\n\n")
