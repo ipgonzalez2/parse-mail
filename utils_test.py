@@ -27,6 +27,10 @@ class TestUtils(unittest.TestCase):
         self.config2.set('Filter0', 'program', 'filter0.c')
         self.config2.set('Filter0', 'function', 'mail_filter_0')
         self.config2.set('Filter0', 'hash', '510676b179b68c5ffd5c9106f31f3ef584139b243ad8b00b4de25bd9ad84e105')
+        self.config2.add_section('Filter1')
+        self.config2.set('Filter1', 'program', 'filter1.c')
+        self.config2.set('Filter1', 'function', 'mail_filter_1')
+        self.config2.set('Filter1', 'hash', '8d686f8c8af9c7e005ce4ec77ed072a2dcdac722ee3c42a0ca0ecc3866ca64af')
         with open('test/filters_test_delete.cfg', 'wb') as configfile:
             self.config2.write(configfile)
 
@@ -68,16 +72,7 @@ class TestUtils(unittest.TestCase):
         fd = utils.removeFilter('test/filters_test_delete.cfg')
         self.config.read('test/filters_test_delete.cfg')
         self.assertTrue(fd == -1)
-        self.assertTrue(len(self.config.sections()) == 1)
-
-
-    """
-    # Test that deletes file undefined
-    def test_delete_2(self):
-        utils.removeFilter('test/file_test2', 'test/filters_test_delete.cfg')
-        self.config.read('test/filters_test_delete.cfg')
         self.assertTrue(len(self.config.sections()) == 2)
-    """
 
 
     def tearDown(self):
