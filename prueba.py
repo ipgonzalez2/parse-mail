@@ -78,10 +78,9 @@ def filter():
 
     #set it as blocking socket
   sock.setblocking(True)
-  print(bpf)
-  print(function_http_filter)
-  print(function_http_filter.socket)
-  print(sock)
+  print(bpf.__dict__)
+  print(function_http_filter.__dict__)
+  print(sock.__dict__)
 
 
   with open('filters.cfg', 'wb') as configfile:
