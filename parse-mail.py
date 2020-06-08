@@ -206,26 +206,33 @@ def help():
     print("    sudo python parse-mail.py              # bind socket to interface established in filters.cfg")
     exit()
 
-if len(argv) == 2:
-  if str(argv[1]) == '-h':
-    help()
-  else:
+
+
+def main():
+  if len(argv) == 2:
+    if str(argv[1]) == '-h':
+      help()
+    else:
+      usage()
+
+  if len(argv) > 2:
     usage()
 
-if len(argv) > 2:
-  usage()
+
+  # Thread that loads filters and print them
+  thread1 = threading.Thread(target=filter)
+
+  # Thread that awaits for changes in directory
+  thread2 = threading.Thread(target=notifier)
+
+  # Start threads
+  thread1.start()
+  thread2.start()
+
+  # Join threads
+  thread1.join()
+  thread2.join()
 
 
-# Thread that loads filters and print them
-thread1 = threading.Thread(target=filter)
-
-# Thread that awaits for changes in directory
-thread2 = threading.Thread(target=notifier)
-
-# Start threads
-thread1.start()
-thread2.start()
-
-# Join threads
-thread1.join()
-thread2.join()
+if __name__ == "__main__":
+  main()
