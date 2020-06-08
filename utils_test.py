@@ -8,7 +8,7 @@ class TestUtils(unittest.TestCase):
 
     # Initial configuration
     def setUp(self):
-        print("Setting up context...\n")
+        print("Setting up context...")
         self.config = ConfigParser.RawConfigParser()
         self.config2 = ConfigParser.RawConfigParser()
 
@@ -60,23 +60,24 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(len(self.config.sections()) == 1)
     
 
-    """
     # Test that deletes file defined
     def test_delete_1(self):
-        utils.removeFilter('test/file_test1', 'test/filters_test_delete.cfg')
+        fd = utils.removeFilter('test/filters_test_delete.cfg')
         self.config.read('test/filters_test_delete.cfg')
+        self.assertTrue(fd == -1)
         for section in self.config.sections()[1:]:
             print(section)
         self.assertTrue(len(self.config.sections()) == 1)
 
 
+    """
     # Test that deletes file undefined
     def test_delete_2(self):
         utils.removeFilter('test/file_test2', 'test/filters_test_delete.cfg')
         self.config.read('test/filters_test_delete.cfg')
         self.assertTrue(len(self.config.sections()) == 2)
-
     """
+
 
     def tearDown(self):
         print("Destroying context...\n")

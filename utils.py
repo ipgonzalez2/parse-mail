@@ -117,7 +117,7 @@ def addFilter(file_path, file_conf):
 
             return numCar, car
         except:
-            print("Error adding filter (the file may not be a mail)...\n")
+            print("Error adding filter (the file may not be a mail)...")
             return numCar, car
     else:
         print("File doesn't exist")
@@ -125,7 +125,8 @@ def addFilter(file_path, file_conf):
 
 # Removes filter for spam file given
 def removeFilter(file_conf):
-
+    fd = -1 
+    
     #get filters in directory
     hashes = []
     for entry in os.listdir(basepath):
