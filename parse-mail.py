@@ -3,7 +3,6 @@
 from __future__ import print_function
 from bcc import BPF
 from sys import argv
-from pynput.keyboard import Key, Listener
 
 import sys
 import asyncore
