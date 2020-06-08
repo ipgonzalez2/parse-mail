@@ -135,11 +135,9 @@ def removeFilter(file_conf):
         hashes.append(hash_summary)
 
     config.read(file_conf)
-    print(hashes)
 
     #Removing filter missed in directory
     for section in config.sections()[1:]:
-      print(config.get(section,'hash'))
       if config.get(section, 'hash') not in hashes:
         if os.path.exists("./filters/" + config.get(section, 'program')):
             os.remove("./filters/" + config.get(section, 'program'))
