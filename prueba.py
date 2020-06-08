@@ -86,10 +86,7 @@ def filter():
   print("Starting filtering...\n")
 
   while 1:
-    f = open("results.txt", "a")
-    f.write(str(os.read(socket_fd, 100000)))
-    f.close()
-      # print(str(os.read(i, 10000)))
+    print(str(os.read(socket_fd, 10000)))
 
 
 #args
