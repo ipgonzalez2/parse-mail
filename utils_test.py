@@ -12,12 +12,14 @@ class TestUtils(unittest.TestCase):
         self.config = ConfigParser.RawConfigParser()
         self.config2 = ConfigParser.RawConfigParser()
 
+        # Configuration add
         self.config.read('test/filters_test_add.cfg')
         for section in self.config.sections()[1:]:
             self.config.remove_section(section)
         with open('test/filters_test_add.cfg', 'wb') as configfile:
             self.config.write(configfile)
 
+        # Configuration delete
         self.config2.read('test/filters_test_delete.cfg')
         for section in self.config2.sections()[1:]:
             self.config2.remove_section(section)
@@ -62,11 +64,10 @@ class TestUtils(unittest.TestCase):
 
     # Test that deletes file defined
     def test_delete_1(self):
+        print("Testing deleting mail in configuration but not in directory")
         fd = utils.removeFilter('test/filters_test_delete.cfg')
         self.config.read('test/filters_test_delete.cfg')
         self.assertTrue(fd == -1)
-        for section in self.config.sections()[1:]:
-            print(section)
         self.assertTrue(len(self.config.sections()) == 1)
 
 
