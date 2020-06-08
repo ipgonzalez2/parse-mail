@@ -117,7 +117,7 @@ def addFilter(file_path, file_conf):
 
             return numCar, car
         except:
-            print("Error adding filter (the file may not be a mail) ...\n")
+            print("Error adding filter (the file may not be a mail)...\n")
             return numCar, car
     else:
         print("File doesn't exist")
