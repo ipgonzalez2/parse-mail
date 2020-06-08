@@ -81,7 +81,7 @@ def filter():
   f = open("s.txt", "a")
   f.write(str(BPF.__dict__))
   f.close()
-
+  BPF.DetachSocketFilter(socket_fd)
   print(sock)
   sock.close()
 
