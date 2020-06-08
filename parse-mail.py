@@ -3,6 +3,7 @@
 from __future__ import print_function
 from bcc import BPF
 from sys import argv
+from pynput.keyboard import Key, Listener
 
 import sys
 import asyncore
@@ -22,7 +23,7 @@ mask = pyinotify.IN_MOVED_TO | pyinotify.IN_DELETE
 
 # BPF params
 bpf = []
-function_http_filter = []
+function_mail_filter = []
 socket_fd = []
 sock = []
 
@@ -39,7 +40,9 @@ basepath = './spam'
 class EventHandler(pyinotify.ProcessEvent):
 
   def process_IN_MOVED_TO(self, event):
-    print("Creating filter for ", event.pathname + "\n")
+    print("-> (+) Creating filter for ", event.pathname + "...\n")
+    config.read('filters.cfg')
+    print("Currently filtering: " + len(config.sections()[1:]) + " mails\n\n")
 
     #Adds filter for file
     utils.addFilter(event.pathname, 'filters.cfg')
@@ -53,16 +56,16 @@ class EventHandler(pyinotify.ProcessEvent):
     bpf.append(BPF(src_file = "filters/"+program,debug = 0))
 
     #load eBPF program function of type SOCKET_FILTER into the kernel eBPF vm
-    #function_http_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
-    function_http_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
+    #function_mail_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
+    function_mail_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
 
     #create raw socket, bind it to interface
     #attach bpf program to socket created
-    BPF.attach_raw_socket(function_http_filter[-1], interface)
+    BPF.attach_raw_socket(function_mail_filter[-1], interface)
 
     #get file descriptor of the socket previously created inside BPF.attach_raw_socket
-    socket_fd.append(function_http_filter[-1].sock)
-    config.set(config.sections()[-1], 'fd', function_http_filter[-1].sock)
+    socket_fd.append(function_mail_filter[-1].sock)
+    config.set(config.sections()[-1], 'fd', function_mail_filter[-1].sock)
 
     #create python socket object, from the file descriptor
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
@@ -76,7 +79,10 @@ class EventHandler(pyinotify.ProcessEvent):
 
   
   def process_IN_DELETE(self, event):
-    print("Removing filter for ", event.pathname + "\n")
+    print("-> (-) Removing filter for ", event.pathname + "...\n")
+    config.read('filters.cfg')
+    print("Currently filtering: " + len(config.sections()[1:]) + " mails\n\n")
+
 
     #get socket descriptor and remove it
     fd = utils.removeFilter('filters.cfg')
@@ -84,15 +90,24 @@ class EventHandler(pyinotify.ProcessEvent):
     os.close(int(fd))
     sock[index].close()
     del bpf[index]
-    del function_http_filter[index]
+    del function_mail_filter[index]
     del sock[index]
     del socket_fd[index]
 
 def filter():
+
   #Reading configuration
   config.read('filters.cfg')
   if os.path.exists("results.txt"):
     os.remove("results.txt")
+
+  print("PARSE-MAIL\n\n")
+  print("**************************************************\n\n")
+  print("Currently filtering: " + len(config.sections()[1:]) + " mails\n\n")
+  print("Linked interface: " + interface + "\n\n")
+  print("Press CTRL-Z to exit\n\n")
+  print("**************************************************\n\n")
+
 
   #Updates configuration
   hashes = []
@@ -139,16 +154,16 @@ def filter():
     bpf.append(BPF(src_file = "filters/"+program,debug = 0))
 
     #load eBPF program function of type SOCKET_FILTER into the kernel eBPF vm
-    #function_http_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
-    function_http_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
+    #function_mail_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
+    function_mail_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
 
     #create raw socket, bind it to interface
     #attach bpf program to socket created
-    BPF.attach_raw_socket(function_http_filter[-1], interface)
+    BPF.attach_raw_socket(function_mail_filter[-1], interface)
 
     #get file descriptor of the socket previously created inside BPF.attach_raw_socket
-    socket_fd.append(function_http_filter[-1].sock)
-    config.set(filter, 'fd', function_http_filter[-1].sock)
+    socket_fd.append(function_mail_filter[-1].sock)
+    config.set(filter, 'fd', function_mail_filter[-1].sock)
 
     #create python socket object, from the file descriptor
     sock.append(socket.fromfd(socket_fd[-1],socket.PF_PACKET,socket.SOCK_RAW,socket.IPPROTO_IP))
