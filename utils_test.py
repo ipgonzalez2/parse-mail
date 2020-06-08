@@ -57,7 +57,7 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(len(self.config.sections()) == 1)
     
 
-"""
+    """
     # Test that deletes file defined
     def test_delete_1(self):
         utils.removeFilter('test/file_test1', 'test/filters_test_delete.cfg')
@@ -73,7 +73,7 @@ class TestUtils(unittest.TestCase):
         self.config.read('test/filters_test_delete.cfg')
         self.assertTrue(len(self.config.sections()) == 2)
 
-"""
+    """
 
     def tearDown(self):
         print("Destroying context...")
