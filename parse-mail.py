@@ -86,8 +86,7 @@ class EventHandler(pyinotify.ProcessEvent):
     del bpf[index]
     del function_http_filter[index]
     del sock[index]
-     # del socket_fd[index]
-    # socket_fd.remove(int(fd))
+    del socket_fd[index]
 
 def filter():
   #Reading configuration
