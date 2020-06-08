@@ -80,15 +80,12 @@ def filter():
   sock.setblocking(True)
   bpf.disassemble_func(function)
   bpf.cleanup()
+  os.close(socket_fd)
   print(function_http_filter.bpf)
   print(dir(function_http_filter.sock))
 
 
   sock.close()
-
-
-  with open('filters.cfg', 'wb') as configfile:
-    config.write(configfile)
 
   print("Starting filtering...\n")
 
