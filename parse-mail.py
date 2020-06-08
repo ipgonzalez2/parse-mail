@@ -83,7 +83,7 @@ class EventHandler(pyinotify.ProcessEvent):
     #get socket descriptor and remove it
     fd = utils.removeFilter('filters.cfg')
     config.read('filters.cfg')
-    print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
+    print("Currently filtering: " + str(len(config.sections()) - 1) + " mails\n\n")
     if fd != -1:
       index = socket_fd.index(int(fd))
       os.close(int(fd))
@@ -177,7 +177,7 @@ def filter():
   while 1:
     for fd in socket_fd:
       f = open("results.txt", "a")
-      f.write(str(socket_fd))
+      f.write(str(socket_fd) + "\n\n")
       f.write(str(os.read(fd, 100000)))
       f.close()
       # print(str(os.read(i, 10000)))
