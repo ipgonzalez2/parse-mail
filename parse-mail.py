@@ -89,7 +89,8 @@ class EventHandler(pyinotify.ProcessEvent):
 def filter():
   #Reading configuration
   config.read('filters.cfg')
-  os.remove("results.txt")
+  if os.path.exists("results.txt"):
+    os.remove("results.txt")
 
   #Updates configuration
   hashes = []
@@ -122,7 +123,6 @@ def filter():
 
   
   print("Binding socket to '%s'" % interface + "\n")
-  print("Starting filtering...\n")
 
   config.read('filters.cfg')
 
@@ -158,6 +158,8 @@ def filter():
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
 
+  print("Starting filtering...\n")
+  
   while 1:
     f = open("results.txt", "a")
     f.write(str(os.read(socket_fd[0], 100000)))
