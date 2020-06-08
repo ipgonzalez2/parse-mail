@@ -139,6 +139,7 @@ def removeFilter(file_conf):
     #Removing filter missed in directory
     for section in config.sections()[1:]:
       if config.get(section, 'hash') not in hashes:
+        print(config.get(section,'fd'))
         if os.path.exists("./filters/" + config.get(section, 'program')):
             os.remove("./filters/" + config.get(section, 'program'))
         if(config.has_option(section,'fd')):

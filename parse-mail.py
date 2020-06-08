@@ -82,16 +82,19 @@ class EventHandler(pyinotify.ProcessEvent):
 
     #get socket descriptor and remove it
     fd = utils.removeFilter('filters.cfg')
-    config.read('filters.cfg')
-    print("Currently filtering: " + str(len(config.sections()) - 1) + " mails\n\n")
+    print(fd)
     if fd != -1:
       index = socket_fd.index(int(fd))
+      print(index)
       os.close(int(fd))
       sock[index].close()
       del bpf[index]
       del function_mail_filter[index]
       del sock[index]
       del socket_fd[index]
+
+    config.read('filters.cfg')
+    print("Currently filtering: " + str(len(config.sections()) - 1) + " mails\n\n")
 
 def filter():
 
