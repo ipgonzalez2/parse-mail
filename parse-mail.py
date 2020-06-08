@@ -40,10 +40,10 @@ class EventHandler(pyinotify.ProcessEvent):
 
   def process_IN_MOVED_TO(self, event):
     print("-> (+) Creating filter for ", event.pathname + "...\n")
-    config.read('filters.cfg')
 
     #Adds filter for file
     utils.addFilter(event.pathname, 'filters.cfg')
+    config.read('filters.cfg')
     print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
     
     #Creates socket for filter
