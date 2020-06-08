@@ -101,11 +101,6 @@ def filter():
     os.remove("results.txt")
 
   print("\n\nSTARTING PARSE-MAIL...\n\n")
-  print("**************************************************\n\n")
-  print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
-  print("Linked interface: " + interface + "\n\n")
-  print("Press CTRL-Z to exit\n\n")
-  print("**************************************************\n\n")
 
 
   #Updates configuration
@@ -120,7 +115,7 @@ def filter():
     if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
       hash_summary = utils.getHash(os.path.join(basepath, entry)).hexdigest()
       if hash_summary not in hashes:
-        print("Adding filter for " + str(entry) + "\n")
+        print("-> (+) Adding filter for " + str(entry) + "\n")
         utils.addFilter(os.path.join(basepath, entry), 'filters.cfg')
       else:
         hashes.remove(hash_summary)
@@ -131,16 +126,19 @@ def filter():
   for section in config.sections()[1:]:
     if config.get(section, 'hash') in hashes:
         if os.path.exists("./filters/" + config.get(section, 'program')):
-            print("Removing filter " + config.get(section, 'program') + "\n")
+            print("-> (-) Removing filter " + config.get(section, 'program') + "\n")
             os.remove("./filters/" + config.get(section, 'program'))
         config.remove_section(section)
   with open('filters.cfg', 'wb') as configfile:
     config.write(configfile)
 
-  
-  print("Binding socket to '%s'" % interface + "\n")
-
   config.read('filters.cfg')
+
+  print("\n**************************************************\n\n")
+  print("Currently filtering " + str(len(config.sections()[1:])) + " mails\n\n")
+  print("Binding socket to interface " + interface + "\n\n")
+  print("Press CTRL-Z to exit\n\n")
+  print("**************************************************\n\n")
 
 
   # Adds every filter in config
