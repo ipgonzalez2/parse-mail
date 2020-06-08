@@ -78,14 +78,9 @@ def filter():
 
     #set it as blocking socket
   sock.setblocking(True)
-  f = open("s.txt", "a")
-  f.write("BPF")
-  f.write(str(dir(bpf)))
-  f.write("FUNCTION")
-  f.write(str(dir(function_http_filter)))
-  f.write("sock")
-  f.write(str(dir(sock)))
-  f.close()
+  print(function_http_filter.bpf)
+  print(function_http_filter.name)
+
 
   sock.close()
 
