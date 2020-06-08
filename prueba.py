@@ -78,10 +78,7 @@ def filter():
 
     #set it as blocking socket
   sock.setblocking(True)
-  f = open("s.txt", "a")
-  f.write(str(BPF.__dict__))
-  f.close()
-  BPF.DetachSocketFilter(socket_fd)
+
   print(sock)
   BPF.close(socket_fd)
   sock.close()
