@@ -81,10 +81,12 @@ class EventHandler(pyinotify.ProcessEvent):
     #get socket descriptor and remove it
     fd = utils.removeFilter('filters.cfg')
     index = socket_fd.index(int(fd))
+    os.close(fd)
     sock[index].close()
     del bpf[index]
     del function_http_filter[index]
     del sock[index]
+     # del socket_fd[index]
     # socket_fd.remove(int(fd))
 
 def filter():
