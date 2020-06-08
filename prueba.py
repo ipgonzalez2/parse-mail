@@ -79,8 +79,7 @@ def filter():
     #set it as blocking socket
   sock.setblocking(True)
   f = open("s.txt", "a")
-  f.write(str(bpf.__dict__))
-  f.write(str(function_http_filter.__dict__))
+  f.write(str(BPF.__dict__))
   f.close()
 
   print(sock)
