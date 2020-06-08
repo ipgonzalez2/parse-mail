@@ -12,7 +12,7 @@ from os import path
 
 
 BLOCK_SIZE = 65536
-basepath = '/home/inesp/contenedor/'
+basepath = './spam/'
 config = ConfigParser.RawConfigParser()
 
 
