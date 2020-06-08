@@ -28,16 +28,11 @@ basepath = '/home/inesp/contenedor/'
 
 
   
-  def process_IN_DELETE(self, event):
-    print("Removing filter for ", event.pathname + "\n")
 
-    #get socket descriptor and remove it
-    fd = utils.removeFilter('filters.cfg')
-    index = socket_fd.index(int(fd))
-    sock[index].close()
-    del bpf[index]
-    del function_http_filter[index]
-    del sock[index]
+    #sock[index].close()
+    #del bpf[index]
+    #del function_http_filter[index]
+    #del sock[index]
     # socket_fd.remove(int(fd))
 
 def filter():
