@@ -13,6 +13,7 @@ import ConfigParser
 import pyinotify
 import hashlib
 import utils
+import time
 
 
 # Configures notifier
@@ -213,6 +214,9 @@ def main():
   if len(argv) > 2:
     usage()
 
+  run_event = threading.Event()
+  run_event.set()
+
   # Thread that loads filters and print them
   thread1 = threading.Thread(target=filter)
 
@@ -221,13 +225,18 @@ def main():
 
   # Start threads
   thread1.start()
+  time.sleep(.5)
   thread2.start()
 
-  # Join threads
-  thread1.join()
-  thread2.join()
+  try:
+    while 1:
+      time.sleep(.1)
+  except KeyboardInterrupt:
+    run_event.clear()
+    thread1.join()
+    thread2.join()
 
 
 if __name__ == "__main__":
-  
+
   main()
