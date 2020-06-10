@@ -235,7 +235,10 @@ def main():
     # Join threads
     thread1.join()
     thread2.join()
+
   except (KeyboardInterrupt, SystemExit):
+    thread1.isAlive = False
+    thread2.isAlive = False
     sys.exit()
 
 
