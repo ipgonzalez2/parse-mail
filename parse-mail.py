@@ -176,14 +176,11 @@ def filter():
   print("Starting filtering...\n")
 
   while 1:
-    try:
-      for fd in socket_fd:
-        f = open("results.txt", "a")
-        f.write(str(socket_fd) + "\n\n")
-        f.write(str(os.read(fd, 100000)))
-        f.close()
-    except KeyboardInterrupt:
-      sys.exit(0)
+    for fd in socket_fd:
+      f = open("results.txt", "a")
+      f.write(str(socket_fd) + "\n\n")
+      f.write(str(os.read(fd, 100000)))
+      f.close()
       # print(str(os.read(i, 10000)))
 
 
@@ -224,16 +221,22 @@ def main():
   if len(argv) > 2:
     usage()
 
+  try:
+    # Thread that loads filters and print them
+    thread1 = threading.Thread(target=filter)
 
-  # Thread that loads filters and print them
-  thread1 = threading.Thread(target=filter)
+    # Thread that awaits for changes in directory
+    thread2 = threading.Thread(target=notifier)
 
-  # Thread that awaits for changes in directory
-  thread2 = threading.Thread(target=notifier)
+    # Start threads
+    thread1.start()
+    thread2.start()
 
-  # Start threads
-  thread1.start()
-  thread2.start()
+    # Join threads
+    thread1.join()
+    thread2.join()
+    except (KeyboardInterrupt, SystemExit):
+      sys.exit()
 
 
 if __name__ == "__main__":
