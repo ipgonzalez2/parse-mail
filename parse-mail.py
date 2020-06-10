@@ -235,8 +235,8 @@ def main():
     # Join threads
     thread1.join()
     thread2.join()
-    except (KeyboardInterrupt, SystemExit):
-      sys.exit()
+  except (KeyboardInterrupt, SystemExit):
+    sys.exit()
 
 
 if __name__ == "__main__":
