@@ -173,6 +173,12 @@ def filter():
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
 
+    while 1:
+      for socket in socket_fd:
+        f = open("results.txt", "a")
+        f.write(os.read(socket, 10000))
+        f.close()
+
   print("Starting filtering...\n")
 
 
