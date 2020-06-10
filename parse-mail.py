@@ -76,7 +76,6 @@ class EventHandler(pyinotify.ProcessEvent):
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
 
-    print(socket_fd)
 
   
   def process_IN_DELETE(self, event):
@@ -94,7 +93,6 @@ class EventHandler(pyinotify.ProcessEvent):
       del socket_fd[index]
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
-    print(socket_fd)
 
 def filter():
 
