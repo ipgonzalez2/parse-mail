@@ -76,6 +76,8 @@ class EventHandler(pyinotify.ProcessEvent):
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
 
+    print(socket_fd)
+
   
   def process_IN_DELETE(self, event):
     print("-> (-) Removing filter for ", event.pathname + "...\n")
@@ -92,6 +94,7 @@ class EventHandler(pyinotify.ProcessEvent):
       del socket_fd[index]
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
+    print(socket_fd)
 
 def filter():
 
@@ -138,7 +141,7 @@ def filter():
   print("Currently filtering " + str(len(config.sections()[1:])) + " mails\n\n")
   print("Binding socket to interface " + interface + "\n\n")
   print("Monitoring " + basepath + "\n\n")
-  print("Press CTRL-Z to exit\n\n")
+  print("Press CTRL-C to exit\n\n")
   print("**************************************************\n\n")
 
 
@@ -174,11 +177,6 @@ def filter():
       config.write(configfile)
 
   print("Starting filtering...\n")
-  while 1:
-    for s in socket_fd:
-      f = open("results.txt", "a")
-      f.write(os.read(s, 10000))
-      f.close()
 
 
 #Watches directory spam/ to seek for changes
@@ -219,8 +217,8 @@ def main():
     usage()
 
   try:
-    notifier()
     filter()
+    notifier()
   except KeyboardInterrupt:
     sys.exit()
 
