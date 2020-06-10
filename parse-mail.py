@@ -173,13 +173,12 @@ def filter():
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
 
-    while 1:
-      for socket in socket_fd:
-        f = open("results.txt", "a")
-        f.write(os.read(socket, 10000))
-        f.close()
-
   print("Starting filtering...\n")
+  while 1:
+    for s in socket_fd:
+      f = open("results.txt", "a")
+      f.write(os.read(s, 10000))
+      f.close()
 
 
 #Watches directory spam/ to seek for changes
@@ -220,8 +219,8 @@ def main():
     usage()
 
   try:
-    filter()
     notifier()
+    filter()
   except KeyboardInterrupt:
     sys.exit()
 
