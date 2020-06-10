@@ -213,10 +213,12 @@ def main():
   if len(argv) > 2:
     usage()
 
-  filter()
-  notifier()
+  try:
+    filter()
+    notifier()
+  except KeyboardInterrupt:
+    sys.exit()
 
 
 if __name__ == "__main__":
-
   main()
