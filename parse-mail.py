@@ -32,7 +32,6 @@ sock = []
 config = ConfigParser.RawConfigParser()
 config.read('filters.cfg')
 interface = config.get('settings', 'interface')
-# CHANGE!!!!!!!!!!!!
 basepath = './spam'
 
 
@@ -214,27 +213,8 @@ def main():
   if len(argv) > 2:
     usage()
 
-  run_event = threading.Event()
-  run_event.set()
-
-  # Thread that loads filters and print them
-  thread1 = threading.Thread(target=filter)
-
-  # Thread that awaits for changes in directory
-  thread2 = threading.Thread(target=notifier)
-
-  # Start threads
-  thread1.start()
-  time.sleep(.5)
-  thread2.start()
-
-  try:
-    while 1:
-      time.sleep(.1)
-  except KeyboardInterrupt:
-    run_event.clear()
-    thread1.join()
-    thread2.join()
+  filter()
+  notifier()
 
 
 if __name__ == "__main__":
