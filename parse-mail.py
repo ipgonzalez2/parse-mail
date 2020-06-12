@@ -114,6 +114,9 @@ class EventHandler(pyinotify.ProcessEvent):
 
     config.read('filters.cfg')
     hashes = []
+    for section in config.sections()[1:]:
+      config.remove_option(section, 'fd')
+      hashes.append(config.get(section, 'hash'))
 
     # Adding filter for files in spam/ if needed
     for entry in os.listdir(basepath):
