@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /usr/share/bcc/examples/networking/parse-mail/parse-mail/
+python parse-mail.py
