@@ -87,7 +87,7 @@ class EventHandler(pyinotify.ProcessEvent):
       #writes configuration
       with open('filters.cfg', 'wb') as configfile:
         config.write(configfile)
-        
+
     except:
       print("Error creating filter")
 
@@ -98,19 +98,21 @@ class EventHandler(pyinotify.ProcessEvent):
     
     print("-> (-) Removing filter for ", event.pathname + "...\n")
 
-    #get socket descriptor and remove it
-    fd = utils.removeFilter('filters.cfg')
-    if fd != -1:
-      index = socket_fd.index(int(fd))
-      os.close(int(fd))
-      sock[index].close()
-      del bpf[index]
-      del function_mail_filter[index]
-      del sock[index]
-      del socket_fd[index]
+    try:
+      #get socket descriptor and remove it
+      fd = utils.removeFilter('filters.cfg')
+      if fd != -1:
+        index = socket_fd.index(int(fd))
+        os.close(int(fd))
+        sock[index].close()
+        del bpf[index]
+        del function_mail_filter[index]
+        del sock[index]
+        del socket_fd[index]
+    except:
+      print("Error removing filter")
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
-    print(socket_fd)
 
   # Generic change in directory
   def process_IN_MODIFY(self, event):
@@ -147,7 +149,6 @@ class EventHandler(pyinotify.ProcessEvent):
           config.write(configfile)
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
-    print(socket_fd)
 
 def filter():
 
