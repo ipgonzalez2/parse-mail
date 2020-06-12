@@ -120,6 +120,7 @@ class EventHandler(pyinotify.ProcessEvent):
       if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
         hash_summary = utils.getHash(os.path.join(basepath, entry)).hexdigest()
         if hash_summary not in hashes:
+
           print("-> (+) Adding filter for " + str(entry) + "\n")
           utils.addFilter(os.path.join(basepath, entry), 'filters.cfg')
           #Creates socket for filter
@@ -131,12 +132,12 @@ class EventHandler(pyinotify.ProcessEvent):
 
           config.set(config.sections()[-1], 'fd', fd)
 
-        #writes configuration
-        with open('filters.cfg', 'wb') as configfile:
-          config.write(configfile)
-
         else:
           hashes.remove(hash_summary)
+
+         #writes configuration
+        with open('filters.cfg', 'wb') as configfile:
+          config.write(configfile)
 
 
     # Removing filters if not in directory spam/
