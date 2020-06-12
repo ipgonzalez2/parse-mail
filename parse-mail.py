@@ -86,6 +86,9 @@ class EventHandler(pyinotify.ProcessEvent):
     with open('filters.cfg', 'wb') as configfile:
       config.write(configfile)
 
+    print(socket_fd)
+
+
 
   # Deletes filter when file is deleted in directory spam
   def process_IN_DELETE(self, event):
@@ -104,6 +107,7 @@ class EventHandler(pyinotify.ProcessEvent):
       del socket_fd[index]
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
+    print(socket_fd)
 
   # Generic change in directory
   def process_IN_MODIFY(self, event):
@@ -115,17 +119,17 @@ class EventHandler(pyinotify.ProcessEvent):
     for entry in os.listdir(basepath):
       if os.path.isfile(os.path.join(basepath, entry)) and entry != '.gitkeep' :
         hash_summary = utils.getHash(os.path.join(basepath, entry)).hexdigest()
-      if hash_summary not in hashes:
-        print("-> (+) Adding filter for " + str(entry) + "\n")
-        utils.addFilter(os.path.join(basepath, entry), 'filters.cfg')
-        #Creates socket for filter
-        config.read('filters.cfg')
-        program = config.get(config.sections()[-1], 'program')
-        function = config.get(config.sections()[-1], 'function')
+        if hash_summary not in hashes:
+          print("-> (+) Adding filter for " + str(entry) + "\n")
+          utils.addFilter(os.path.join(basepath, entry), 'filters.cfg')
+          #Creates socket for filter
+          config.read('filters.cfg')
+          program = config.get(config.sections()[-1], 'program')
+          function = config.get(config.sections()[-1], 'function')
 
-        fd = loadFilter(program, function)
+          fd = loadFilter(program, function)
 
-        config.set(config.sections()[-1], 'fd', fd)
+          config.set(config.sections()[-1], 'fd', fd)
 
         #writes configuration
         with open('filters.cfg', 'wb') as configfile:
@@ -151,6 +155,7 @@ class EventHandler(pyinotify.ProcessEvent):
           del socket_fd[index]
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
+    print(socket_fd)
 
 def filter():
 
