@@ -147,6 +147,7 @@ class EventHandler(pyinotify.ProcessEvent):
     config.read('filters.cfg')
     for section in config.sections()[1:]:
       if config.get(section, 'hash') in hashes:
+        print("-> (-) Removing filter for ", event.pathname + "...\n")
         #get socket descriptor and remove it
         fd = utils.removeFilter('filters.cfg')
         if fd != -1:
