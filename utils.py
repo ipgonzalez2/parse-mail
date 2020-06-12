@@ -47,7 +47,6 @@ def addFilter(file_path, file_conf):
 
             # Calculating where the message begins and his size
             inicioMensaje = match.end()
-            print(inicioMensaje)
             tamanhoTotal = os.stat(file_path).st_size
             tamanhoMensaje = tamanhoTotal - inicioMensaje
             limit = False
@@ -56,16 +55,13 @@ def addFilter(file_path, file_conf):
                 numCar = int(float(15000*float((float(porcentaje)/100))))
                 limit = True
             else:
-                print("tamanhoo menor 15000")
                 # Num of characters to match (max 30)
-                print("tamabho mensaje" + tamanhoMensaje)
-                print(porcentaje)
-                print(int(tamanhoMensaje*porcentaje))
                 numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
-                print(numCar)
 
             if numCar > 30:
                 numCar = 30
+            elif numCar == 0:
+                numCar = tamanhoMensaje
 
             if limit:
                 x = int(float((15000 - inicioMensaje)/numCar))
