@@ -18,7 +18,7 @@ import time
 
 # Configures notifier
 wm = pyinotify.WatchManager()
-mask = pyinotify.IN_MOVED_TO | pyinotify.IN_DELETE | pyinotify.ALL_EVENTS
+mask = pyinotify.IN_MOVED_TO | pyinotify.IN_DELETE | pyinotify.IN_MODIFY
 
 
 # BPF params
@@ -106,7 +106,7 @@ class EventHandler(pyinotify.ProcessEvent):
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
 
   # Generic change in directory
-  def process_ALL_EVENTS(self, event):
+  def process_IN_MODIFY(self, event):
 
     config.read('filters.cfg')
     hashes = []
