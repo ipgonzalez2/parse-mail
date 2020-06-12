@@ -69,24 +69,26 @@ class EventHandler(pyinotify.ProcessEvent):
     print("-> (+) Creating filter for ", event.pathname + "...\n")
 
     #Adds filter for file
-    utils.addFilter(event.pathname, 'filters.cfg')
-    config.read('filters.cfg')
-    print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
+    numCar = utils.addFilter(event.pathname, 'filters.cfg')
     
-    #Creates socket for filter
-    config.read('filters.cfg')
-    program = config.get(config.sections()[-1], 'program')
-    function = config.get(config.sections()[-1], 'function')
+    if(numCar != -1):
+      config.read('filters.cfg')
+      print("Currently filtering: " + str(len(config.sections()[1:])) + " mails\n\n")
+    
+      #Creates socket for filter
+      config.read('filters.cfg')
+      program = config.get(config.sections()[-1], 'program')
+      function = config.get(config.sections()[-1], 'function')
 
-    fd = loadFilter(program, function)
+      fd = loadFilter(program, function)
 
-    config.set(config.sections()[-1], 'fd', fd)
+      config.set(config.sections()[-1], 'fd', fd)
 
-    #writes configuration
-    with open('filters.cfg', 'wb') as configfile:
-      config.write(configfile)
+      #writes configuration
+      with open('filters.cfg', 'wb') as configfile:
+        config.write(configfile)
 
-    print(socket_fd)
+      print(socket_fd)
 
 
 
