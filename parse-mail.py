@@ -142,10 +142,11 @@ class EventHandler(pyinotify.ProcessEvent):
         with open('filters.cfg', 'wb') as configfile:
           config.write(configfile)
 
-
+    print(hashes)
     # Removing filters if not in directory spam/
     config.read('filters.cfg')
     for section in config.sections()[1:]:
+      print(config.get(section, 'hash'))
       if config.get(section, 'hash') in hashes:
         print("-> (-) Removing filter for ", event.pathname + "...\n")
         #get socket descriptor and remove it
