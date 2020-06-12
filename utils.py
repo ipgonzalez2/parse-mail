@@ -56,7 +56,7 @@ def addFilter(file_path, file_conf):
                 numCar = int(float(15000*float((float(porcentaje)/100))))
                 limit = True
             else:
-                print("tamaño menor 15000")
+                print("tamanhoo menor 15000")
                 # Num of characters to match (max 30)
                 numCar = int(float(tamanhoMensaje*float((float(porcentaje)/100))))
                 print(numCar)
