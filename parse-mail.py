@@ -113,6 +113,19 @@ class EventHandler(pyinotify.ProcessEvent):
   def process_IN_MODIFY(self, event):
 
     config.read('filters.cfg')
+
+    #get socket descriptor and remove it
+    fd = utils.removeFilter('filters.cfg')
+    if fd != -1:
+      print("-> (-) Removing filter for ", event.pathname + "...\n")
+      index = socket_fd.index(int(fd))
+      os.close(int(fd))
+      sock[index].close()
+      del bpf[index]
+      del function_mail_filter[index]
+      del sock[index]
+      del socket_fd[index]
+
     hashes = []
     for section in config.sections()[1:]:
       config.remove_option(section, 'fd')
@@ -141,24 +154,6 @@ class EventHandler(pyinotify.ProcessEvent):
          #writes configuration
         with open('filters.cfg', 'wb') as configfile:
           config.write(configfile)
-
-    print(hashes)
-    # Removing filters if not in directory spam/
-    config.read('filters.cfg')
-    for section in config.sections()[1:]:
-      print(config.get(section, 'hash'))
-      if config.get(section, 'hash') in hashes:
-        print("-> (-) Removing filter for ", event.pathname + "...\n")
-        #get socket descriptor and remove it
-        fd = utils.removeFilter('filters.cfg')
-        if fd != -1:
-          index = socket_fd.index(int(fd))
-          os.close(int(fd))
-          sock[index].close()
-          del bpf[index]
-          del function_mail_filter[index]
-          del sock[index]
-          del socket_fd[index]
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
     print(socket_fd)
