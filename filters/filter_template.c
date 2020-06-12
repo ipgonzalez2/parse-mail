@@ -44,10 +44,10 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
 
 	struct tcp_t *tcp = cursor_advance(cursor, sizeof(*tcp));
 
-	//DE momento pruebas no
-	/*if(tcp->dst_port != 25){
-		goto DROP;
-	}*/
+	
+	if(tcp->dst_port != 25){
+		goto KEEP;
+	}
 
 	tcp_header_length = tcp->offset << 2; //SHL 2 -> *4 multiply
 
@@ -80,9 +80,9 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
     u32 size = payload_length - i;
     u32 tamanho = {{tam}};
 
-    /*if(size != tamanho){
-    	goto DROP;
-    }*/
+    if(size != tamanho){
+    	goto KEEP;
+    }
 
 	//Checks random characters
 	int j = 0;
@@ -107,11 +107,11 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
 
 	//match
     if(isSpam){
-    	goto KEEP;
+    	goto DROP;
     }
 
 	//no match
-	goto DROP;
+	goto KEEP;
 
 	//keep the packet and send it to userspace retruning -1
 	KEEP:
