@@ -88,8 +88,11 @@ class EventHandler(pyinotify.ProcessEvent):
       with open('filters.cfg', 'wb') as configfile:
         config.write(configfile)
 
+
     except:
       print("Error creating filter")
+
+    print(socket_fd)
 
 
 
