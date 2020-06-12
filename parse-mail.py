@@ -135,8 +135,8 @@ class EventHandler(pyinotify.ProcessEvent):
         with open('filters.cfg', 'wb') as configfile:
           config.write(configfile)
 
-      else:
-        hashes.remove(hash_summary)
+        else:
+          hashes.remove(hash_summary)
 
 
     # Removing filters if not in directory spam/
