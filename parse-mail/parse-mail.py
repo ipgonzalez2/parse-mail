@@ -118,6 +118,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
   # Generic change in directory
   def process_IN_MODIFY(self, event):
+    print(event)
 
     config.read('filters.cfg')
 
@@ -213,6 +214,13 @@ def filter():
       config.write(configfile)
 
   print("Starting filtering...\n")
+
+  
+
+  for i in socket_fd:
+    f = open("demofile2.txt", "a")
+    f.write(os.read(i, 100000))
+    f.close()
 
 
 #Watches directory spam/ to seek for changes
