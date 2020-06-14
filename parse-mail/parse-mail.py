@@ -39,7 +39,6 @@ def loadFilter(program, function):
   bpf.append(BPF(src_file = "filters/"+program,debug = 0))
 
   #load eBPF program function of type SOCKET_FILTER into the kernel eBPF vm
-  #function_mail_filter = bpf.load_func(function, BPF.SOCKET_FILTER)
   function_mail_filter.append(bpf[-1].load_func(function, BPF.SOCKET_FILTER))
 
   #create raw socket, bind it to interface
