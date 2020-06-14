@@ -215,14 +215,6 @@ def filter():
 
   print("Starting filtering...\n")
 
-  
-  while 1:
-
-    for i in socket_fd:
-      f = open("demofile2.txt", "a")
-      f.write(os.read(i, 100000))
-      f.close()
-
 
 #Watches directory spam/ to seek for changes
 def notifier():
