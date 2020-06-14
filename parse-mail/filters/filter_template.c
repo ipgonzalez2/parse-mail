@@ -45,9 +45,9 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
 	struct tcp_t *tcp = cursor_advance(cursor, sizeof(*tcp));
 
 	
-	if(tcp->dst_port != 25){
+	/*if(tcp->dst_port != 25){
 		goto KEEP;
-	}
+	}*/
 
 	tcp_header_length = tcp->offset << 2; //SHL 2 -> *4 multiply
 
@@ -81,7 +81,7 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
     u32 tamanho = {{tam}};
 
     if(size != tamanho){
-    	goto KEEP;
+    	goto DROP;
     }
 
 	//Checks random characters
@@ -107,7 +107,7 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
 
 	//match
     if(isSpam){
-    	goto DROP;
+    	goto KEEP;
     }
 
 	//no match
