@@ -262,15 +262,10 @@ def main():
   if len(argv) > 2:
     usage()
 
-  try:
-    thread1 = threading.Thread(filter())
-    thread1.start()
-    thread2 = threading.Thread(notifier())
-    thread2.start()
-    # filter()
-    # notifier()
-  except KeyboardInterrupt:
-    sys.exit()
+  thread1 = threading.Thread(filter())
+  thread1.start()
+  thread2 = threading.Thread(notifier())
+  thread2.start()
 
 
 if __name__ == "__main__":
