@@ -80,9 +80,9 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
     u32 size = payload_length - i;
     u32 tamanho = {{tam}};
 
-    if(size != tamanho){
+    /*if(size != tamanho){
     	goto DROP;
-    }
+    }*/
 
 	//Checks random characters
 	int j = 0;
