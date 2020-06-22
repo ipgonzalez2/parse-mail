@@ -220,10 +220,11 @@ def filter():
   print("Starting filtering...\n")
 
   while 1:
-    for fd in socket_fd:
+    for s in socket_fd:
       f = open("results.txt", "a")
       f.write(str(socket_fd))
-      f.write(os.read(fd, 10000))
+      f.write(str(s))
+      f.write(os.read(s, 10000))
       f.close()
 
 
