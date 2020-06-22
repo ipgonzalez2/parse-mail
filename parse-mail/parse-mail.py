@@ -219,10 +219,11 @@ def filter():
   print("Starting filtering...\n")
 
   while 1:
-    for fd in socket_fd:
-      f = open("results.txt", "w")
-      f.write(os.read(fd, 10000))
-      f.close()
+    for fd in socket_fd:´
+      print(os.read(fd, 10000))
+      # f = open("results.txt", "w")
+      # f.write(os.read(fd, 10000))
+      # f.close()
 
 
 #Watches directory spam/ to seek for changes
