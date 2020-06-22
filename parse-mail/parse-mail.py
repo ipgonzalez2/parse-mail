@@ -222,7 +222,6 @@ def filter():
     for fd in socket_fd:
       f = open("results.txt", "a")
       f.write(str(socket_fd))
-      f.write(str(fd))
       f.write(os.read(fd, 10000))
       f.close()
 
