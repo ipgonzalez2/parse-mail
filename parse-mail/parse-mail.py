@@ -115,6 +115,9 @@ class EventHandler(pyinotify.ProcessEvent):
       print("Error removing filter")
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
+    print(bpf)
+    print(function_mail_filter)
+    print(sock)
     print(socket_fd)
 
   # Generic change in directory
@@ -269,6 +272,8 @@ def main():
   thread2 = threading.Thread(target=notifier)
   thread1.start()
   thread2.start()
+  thread1.join()
+  thread2.join()
 
 
 if __name__ == "__main__":
