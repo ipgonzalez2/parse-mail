@@ -155,7 +155,8 @@ class EventHandler(pyinotify.ProcessEvent):
 
 def filter():
 
-  os.remove("results.txt")
+  if os.path.exists("results.txt"):
+    os.remove("results.txt")
 
   #Reading configuration
   config.read('filters.cfg')
