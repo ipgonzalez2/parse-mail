@@ -262,9 +262,9 @@ def main():
   if len(argv) > 2:
     usage()
 
-  thread1 = threading.Thread(filter())
+  thread1 = threading.Thread(target=filter)
+  thread2 = threading.Thread(target=notifier)
   thread1.start()
-  thread2 = threading.Thread(notifier())
   thread2.start()
 
 
