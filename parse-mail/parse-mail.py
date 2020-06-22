@@ -155,6 +155,8 @@ class EventHandler(pyinotify.ProcessEvent):
 
 def filter():
 
+  os.remove("results.txt")
+
   #Reading configuration
   config.read('filters.cfg')
 
@@ -215,6 +217,12 @@ def filter():
 
   print("Starting filtering...\n")
 
+  while 1:
+    for fd in socket_fd:
+      f = open("results.txt", "w")
+      f.write(os.read(fd, 10000))
+      f.close()
+
 
 #Watches directory spam/ to seek for changes
 def notifier():
@@ -254,8 +262,12 @@ def main():
     usage()
 
   try:
-    filter()
-    notifier()
+    thread1 = threading.Thread(filter())
+    thread1.start()
+    thread2 = threading.Thread(notifier())
+    thread2.start()
+    # filter()
+    # notifier()
   except KeyboardInterrupt:
     sys.exit()
 
