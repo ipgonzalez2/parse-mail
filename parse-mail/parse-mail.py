@@ -53,7 +53,7 @@ def loadFilter(program, function):
 
   #set it as blocking socket
   sock[-1].setblocking(True)
-
+  print(socket_fd[-1])
   return socket_fd[-1]
 
 
