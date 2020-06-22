@@ -53,7 +53,6 @@ def loadFilter(program, function):
 
   #set it as blocking socket
   sock[-1].setblocking(True)
-  print(socket_fd[-1])
   return socket_fd[-1]
 
 
@@ -91,7 +90,7 @@ class EventHandler(pyinotify.ProcessEvent):
     except:
       print("Error creating filter")
 
-    print(socket_fd)
+    
 
 
 
@@ -115,14 +114,9 @@ class EventHandler(pyinotify.ProcessEvent):
       print("Error removing filter")
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
-    print(bpf)
-    print(function_mail_filter)
-    print(sock)
-    print(socket_fd)
 
   # Generic change in directory
   def process_IN_MODIFY(self, event):
-    print(event)
 
     config.read('filters.cfg')
 
@@ -224,7 +218,7 @@ def filter():
 
   while 1:
     for s in socket_fd:
-      f = open("results.txt", "a")
+      f = open("results.txt", "aw")
       f.write(str(socket_fd))
       f.write(str(s))
       f.write(os.read(s, 10000))
