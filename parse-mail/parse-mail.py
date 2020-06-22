@@ -219,7 +219,7 @@ def filter():
   print("Starting filtering...\n")
 
   while 1:
-    for fd in socket_fd:´
+    for fd in socket_fd:
       print(os.read(fd, 10000))
       # f = open("results.txt", "w")
       # f.write(os.read(fd, 10000))
