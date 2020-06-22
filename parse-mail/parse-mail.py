@@ -115,6 +115,7 @@ class EventHandler(pyinotify.ProcessEvent):
       print("Error removing filter")
 
     print("Currently filtering: " + str(len(bpf)) + " mails\n\n")
+    print(socket_fd)
 
   # Generic change in directory
   def process_IN_MODIFY(self, event):
