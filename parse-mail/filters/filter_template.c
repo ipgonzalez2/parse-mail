@@ -111,7 +111,7 @@ int mail_filter_{{id}}(struct __sk_buff *skb) {
     }
 
 	//no match
-	goto KEEP;
+	goto DROP;
 
 	//keep the packet and send it to userspace retruning -1
 	KEEP:
